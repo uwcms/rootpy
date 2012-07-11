@@ -87,25 +87,116 @@ plot your ROOT histograms or graphs with matplotlib instead.</li>
 <li>conversion of ROOT TFiles containing TTrees into
 <a class="reference external" href="http://www.hdfgroup.org/HDF5/">HDF5</a> format with
 <a class="reference external" href="http://www.pytables.org/">PyTables</a>.</li>
-<li>conversion of TTrees into <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html">ndarrays</a></li>
+<li>conversion of TTrees into <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html">ndarrays</a>
+and <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.recarray.html">recarrays</a>.
+Now take advantage of the many statistical and numerical packages
+that Python offers (<a class="reference external" href="http://numpy.scipy.org/">NumPy</a>, <a class="reference external" href="http://www.scipy.org/">SciPy</a>,
+<a class="reference external" href="http://statsmodels.sourceforge.net/">StatsModels</a>,
+use <a class="reference external" href="http://scikit-learn.org">scikit-learn</a> for machine
+learning instead of <a class="reference external" href="http://tmva.sourceforge.net/">TMVA</a>).</li>
+<li>a framework for parallelizing processes that run over many TTrees.</li>
+<li><tt class="docutils literal"><span class="pre">roosh</span></tt>, a Bash-like shell environment for the ROOT TFile.</li>
+<li>a collection of useful command line scripts: <tt class="docutils literal"><span class="pre">root-ls</span></tt>, <tt class="docutils literal"><span class="pre">root-cp</span></tt>,
+<tt class="docutils literal"><span class="pre">root-tree-ls</span></tt>, and others.</li>
+</ul>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>At least Python 2.6 and <a class="reference external" href="http://root.cern.ch/">ROOT</a> with <a class="reference external" href="http://root.cern.ch/drupal/content/pyroot">PyROOT</a> enabled are required.
+<a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib</a>, <a class="reference external" href="http://numpy.scipy.org/">NumPy</a>, <a class="reference external" href="http://www.pytables.org/">PyTables</a>, and <a class="reference external" href="http://pyyaml.org/">PyYAML</a>
+are optional.</p>
+</div>
+<div class="section" id="compatibility">
+<h2>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this headline">¶</a></h2>
+<p>TBA</p>
+</div>
+<div class="section" id="getting-the-latest-source">
+<h2>Getting the Latest Source<a class="headerlink" href="#getting-the-latest-source" title="Permalink to this headline">¶</a></h2>
+<p>Clone the repository with git:</p>
+<div class="highlight-python"><pre>git clone git://github.com/rootpy/rootpy.git</pre>
+</div>
+<p>then clone any submodules:</p>
+<div class="highlight-python"><pre>cd rootpy
+git submodule init
+git submodule update</pre>
+</div>
+<p>or checkout with svn:</p>
+<div class="highlight-python"><pre>svn checkout http://svn.github.com/rootpy/rootpy</pre>
+</div>
+<p>Note: svn does not checkout git submodules so you will end up with an
+incomplete <cite>rootpy</cite>.</p>
+<p>Still using svn? Watch <a class="reference external" href="http://www.youtube.com/watch?v=4XpnKHJAok8">this</a>.</p>
+</div>
+<div class="section" id="manual-installation">
+<h2>Manual Installation<a class="headerlink" href="#manual-installation" title="Permalink to this headline">¶</a></h2>
+<p>If you have obtained a copy of <cite>rootpy</cite> yourself use the <tt class="docutils literal"><span class="pre">setup.py</span></tt>
+script to install.</p>
+<p>To install in your <a class="reference external" href="http://www.python.org/dev/peps/pep-0370/">home directory</a>:</p>
+<div class="highlight-python"><pre>python setup.py install --user</pre>
+</div>
+<p>To install system-wide (requires root privileges):</p>
+<div class="highlight-python"><pre>sudo python setup.py install</pre>
+</div>
+<p>To install optional requirements (<a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib</a>, <a class="reference external" href="http://numpy.scipy.org/">NumPy</a>, etc.):</p>
+<div class="highlight-python"><pre>pip install -U -r optional-requirements.txt</pre>
+</div>
+<p>To install roosh requirements:</p>
+<div class="highlight-python"><pre>pip install -U -r roosh-requirements.txt</pre>
+</div>
+<p>To disable building the extension modules, do this before installing:</p>
+<div class="highlight-python"><pre>export ROOTPY_NO_EXT=1</pre>
+</div>
+</div>
+<div class="section" id="automatic-installation">
+<h2>Automatic Installation<a class="headerlink" href="#automatic-installation" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to install a <a class="reference external" href="http://pypi.python.org/pypi/rootpy/">released version</a> of
+<cite>rootpy</cite> is with <a class="reference external" href="http://pypi.python.org/pypi/pip">pip</a>.</p>
+<p>To install in your <a class="reference external" href="http://www.python.org/dev/peps/pep-0370/">home directory</a>:</p>
+<div class="highlight-python"><pre>pip install --user rootpy</pre>
+</div>
+<p>To install system-wide (requires root privileges):</p>
+<div class="highlight-python"><pre>sudo pip install rootpy</pre>
+</div>
+</div>
+<div class="section" id="post-installation">
+<h2>Post-Installation<a class="headerlink" href="#post-installation" title="Permalink to this headline">¶</a></h2>
+<p>If you installed <cite>rootpy</cite> into your home directory with the <cite>&#8211;user</cite> option
+above, add <tt class="docutils literal"><span class="pre">${HOME}/.local/bin</span></tt> to your <tt class="docutils literal"><span class="pre">${PATH}</span></tt> if it is not there
+already (put this in your .bashrc):</p>
+<div class="highlight-python"><pre>export PATH=${HOME}/.local/bin${PATH:+:$PATH}</pre>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>see examples/*</p>
+</div>
+<div class="section" id="developers-wanted">
+<h2>Developers Wanted<a class="headerlink" href="#developers-wanted" title="Permalink to this headline">¶</a></h2>
+<p>Please contact me (Noel dot Dawe AT cern dot ch) if you have ideas
+or contributions. Feel free to fork
+<a class="reference external" href="https://github.com/rootpy/rootpy">rootpy on GitHub</a>
+and later submit a pull request.</p>
+<p><cite>rootpy</cite> needs attention in these areas:</p>
+<ul class="simple">
+<li>Documentation</li>
+<li>Tutorials</li>
+<li>A website displaying the above (currently here:
+<a class="reference external" href="http://ndawe.github.com/rootpy">http://ndawe.github.com/rootpy</a>)</li>
+<li>Unit testing</li>
+<li>Brenchmarking performance (i.e. Tree read/write)</li>
+<li>Finishing the server/worker code for distributed computing across multiple nodes</li>
+<li>Creation of a TBrowser alternative using PyGTK</li>
+<li>Creation of a framework for managing datasets (using SQLite as a back-end?
+with revision control?)</li>
+<li>Additional features anyone would like to implement</li>
 </ul>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="start.html">Getting Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="start.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="start.html#install">Install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="start.html#getting-the-latest-source">Getting the latest source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="start.html#watch-rootpy-do-tricks">Watch rootpy do tricks</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<ul>
+<li class="toctree-l1"><a class="reference internal" href="start.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/modules.html">rootpy</a></li>
 </ul>
+</div>
 </div>
 </div>
 
@@ -114,7 +205,24 @@ plot your ROOT histograms or graphs with matplotlib instead.</li>
         </div>
       </div>
       <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper"><h3>Related Topics</h3>
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">rootpy</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#compatibility">Compatibility</a></li>
+<li><a class="reference internal" href="#getting-the-latest-source">Getting the Latest Source</a></li>
+<li><a class="reference internal" href="#manual-installation">Manual Installation</a></li>
+<li><a class="reference internal" href="#automatic-installation">Automatic Installation</a></li>
+<li><a class="reference internal" href="#post-installation">Post-Installation</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#developers-wanted">Developers Wanted</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
       <li>Next: <a href="start.html" title="next chapter">Getting Started</a></li>
