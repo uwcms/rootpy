@@ -1,0 +1,406 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>rootpy.tree.chain &mdash; rootpy 0.7.0-a0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.7.0-a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="rootpy 0.7.0-a0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../../_static/clean_small.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+  
+    <a href="http://github.com/rootpy/rootpy"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">rootpy 0.7.0-a0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for rootpy.tree.chain</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">..io</span> <span class="kn">import</span> <span class="nb">open</span> <span class="k">as</span> <span class="n">ropen</span><span class="p">,</span> <span class="n">DoesNotExist</span>
+<span class="kn">from</span> <span class="nn">.filtering</span> <span class="kn">import</span> <span class="n">EventFilterList</span>
+
+
+<span class="k">class</span> <span class="nc">_BaseTreeChain</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                 <span class="nb">buffer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">branches</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">events</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">stream</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">onfilechange</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">cache</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">cache_size</span><span class="o">=</span><span class="mi">10000000</span><span class="p">,</span>
+                 <span class="n">learn_entries</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">always_read</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">ignore_unsupported</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="nb">buffer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">branches</span> <span class="o">=</span> <span class="n">branches</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span> <span class="o">=</span> <span class="n">EventFilterList</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">userdata</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_events</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_unsupported</span> <span class="o">=</span> <span class="n">ignore_unsupported</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span>
+
+        <span class="k">if</span> <span class="n">onfilechange</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">onfilechange</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filechange_hooks</span> <span class="o">=</span> <span class="n">onfilechange</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">usecache</span> <span class="o">=</span> <span class="n">cache</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_size</span> <span class="o">=</span> <span class="n">cache_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learn_entries</span> <span class="o">=</span> <span class="n">learn_entries</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rollover</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;unable to initialize TreeChain&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">always_read</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_always_read</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">always_read</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">always_read</span><span class="p">:</span>
+                <span class="n">always_read</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">always_read</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">always_read</span> <span class="o">=</span> <span class="p">[</span><span class="n">always_read</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">always_read</span><span class="p">(</span><span class="n">always_read</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">branches</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">branch</span> <span class="ow">in</span> <span class="n">always_read</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">branch</span><span class="p">:</span>
+                    <span class="n">branchs</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">branchs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">always_read</span><span class="p">(</span><span class="n">branches</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__nonzero__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">_next_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override in subclasses</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">always_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branches</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_always_read</span> <span class="o">=</span> <span class="n">branches</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">always_read</span><span class="p">(</span><span class="n">branches</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">Draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Loop over subfiles, draw each, and sum the output into a single</span>
+<span class="sd">        histogram.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rollover</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c"># Make our own copy of the drawn histogram</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="c"># Make it memory resident</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">SetDirectory</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> instance has no attribute &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> \
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">attr</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">__getitem__</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branch</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">__contains__</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">passed_events</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">entries</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">total_entries</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">GetEntries</span><span class="p">())</span>
+            <span class="n">t2</span> <span class="o">=</span> <span class="n">t1</span>
+            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">:</span>
+                <span class="n">entries</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">userdata</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">entry</span>
+                    <span class="n">passed_events</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">==</span> <span class="n">passed_events</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t2</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">,</span> \
+                        <span class="s">&quot;</span><span class="si">%i</span><span class="s"> entries per second. </span><span class="si">%.0f%%</span><span class="s"> done current tree.&quot;</span> <span class="o">%</span> \
+                        <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">entries</span> <span class="o">/</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)),</span>
+                        <span class="mi">100</span> <span class="o">*</span> <span class="n">entries</span> <span class="o">/</span> <span class="n">total_entries</span><span class="p">)</span>
+                    <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">==</span> <span class="n">passed_events</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">%i</span><span class="s"> entries per second&quot;</span> <span class="o">%</span> \
+                <span class="nb">int</span><span class="p">(</span><span class="n">entries</span> <span class="o">/</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">))</span>
+            <span class="k">print</span> <span class="s">&quot;Read </span><span class="si">%i</span><span class="s"> bytes in </span><span class="si">%i</span><span class="s"> transactions&quot;</span> <span class="o">%</span> \
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">GetBytesRead</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">GetReadCalls</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_events</span> <span class="o">+=</span> <span class="n">entries</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rollover</span><span class="p">():</span>
+                <span class="k">break</span>
+
+    <span class="k">def</span> <span class="nf">_rollover</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">_BaseTreeChain</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_file</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">ropen</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">,</span> <span class="s">&quot;WARNING: Skipping file. &quot;</span> \
+                                  <span class="s">&quot;Could not open file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">filename</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rollover</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">ignore_unsupported</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ignore_unsupported</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">,</span> <span class="s">&quot;WARNING: Skipping file. &quot;</span> \
+                                  <span class="s">&quot;Tree </span><span class="si">%s</span><span class="s"> does not exist in file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> \
+                                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rollover</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">GetListOfBranches</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">,</span> <span class="s">&quot;WARNING: skipping tree with &quot;</span> \
+                                  <span class="s">&quot;no branches in file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">filename</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rollover</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">branches</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">branches</span><span class="p">,</span> <span class="n">exclusive</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">buffer</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">set_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span>
+                                 <span class="n">ignore_missing</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                 <span class="n">transfer_objects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">buffer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">use_cache</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">usecache</span><span class="p">,</span>
+                            <span class="n">cache_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_size</span><span class="p">,</span>
+                            <span class="n">learn_entries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learn_entries</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">always_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_always_read</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">GetWeight</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">args</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filechange_hooks</span><span class="p">:</span>
+            <span class="n">target</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+
+<div class="viewcode-block" id="TreeChain"><a class="viewcode-back" href="../../../reference/rootpy.tree.html#rootpy.tree.chain.TreeChain">[docs]</a><span class="k">class</span> <span class="nc">TreeChain</span><span class="p">(</span><span class="n">_BaseTreeChain</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A ROOT.TChain replacement</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span>
+                 <span class="nb">buffer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">branches</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">events</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">stream</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">onfilechange</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">cache</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">cache_size</span><span class="o">=</span><span class="mi">10000000</span><span class="p">,</span>
+                 <span class="n">learn_entries</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">always_read</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">ignore_unsupported</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">files</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="n">files</span><span class="p">[:]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s">&quot;unable to initialize TreeChain: no files&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curr_file_idx</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">TreeChain</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span> <span class="nb">buffer</span><span class="p">,</span> <span class="n">branches</span><span class="p">,</span>
+                <span class="n">events</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">onfilechange</span><span class="p">,</span>
+                <span class="n">cache</span><span class="p">,</span> <span class="n">cache_size</span><span class="p">,</span> <span class="n">learn_entries</span><span class="p">,</span>
+                <span class="n">always_read</span><span class="p">,</span> <span class="n">ignore_unsupported</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TreeChain.reset"><a class="viewcode-back" href="../../../reference/rootpy.tree.html#rootpy.tree.chain.TreeChain.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the chain to the first file</span>
+<span class="sd">        Note: not valid when in queue mode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TreeChain</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curr_file_idx</span> <span class="o">=</span> <span class="mi">0</span>
+</div>
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_next_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">curr_file_idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_file_idx</span><span class="p">]</span>
+        <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">%i</span><span class="s"> file(s) remaining...&quot;</span> <span class="o">%</span> \
+            <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">curr_file_idx</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curr_file_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">filename</span>
+
+</div>
+<div class="viewcode-block" id="TreeQueue"><a class="viewcode-back" href="../../../reference/rootpy.tree.html#rootpy.tree.chain.TreeQueue">[docs]</a><span class="k">class</span> <span class="nc">TreeQueue</span><span class="p">(</span><span class="n">_BaseTreeChain</span><span class="p">):</span>
+
+    <span class="n">SENTINEL</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span>
+                 <span class="nb">buffer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">branches</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">events</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">stream</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">onfilechange</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">cache</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">cache_size</span><span class="o">=</span><span class="mi">10000000</span><span class="p">,</span>
+                 <span class="n">learn_entries</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">always_read</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">ignore_unsupported</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+        <span class="c"># For some reason, multiprocessing.queues d.n.e. until</span>
+        <span class="c"># one has been created (Mac OS)</span>
+        <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">queues</span><span class="o">.</span><span class="n">Queue</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;files must be a multiprocessing.Queue&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">files</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">TreeQueue</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span> <span class="nb">buffer</span><span class="p">,</span> <span class="n">branches</span><span class="p">,</span>
+                <span class="n">events</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">onfilechange</span><span class="p">,</span>
+                <span class="n">cache</span><span class="p">,</span> <span class="n">cache_size</span><span class="p">,</span> <span class="n">learn_entries</span><span class="p">,</span>
+                <span class="n">always_read</span><span class="p">,</span> <span class="n">ignore_unsupported</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c"># not reliable</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">qsize</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__nonzero__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c"># not reliable</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_next_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">SENTINEL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="n">filename</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2011, Noel Dawe, Jeff Klukas.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>

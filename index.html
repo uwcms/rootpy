@@ -1,66 +1,153 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>rootpy by rootpy</title>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>rootpy &mdash; rootpy 0.7.0-a0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.7.0-a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="rootpy 0.7.0-a0 documentation" href="#" />
+    <link rel="next" title="Getting Started" href="start.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="_static/clean_small.css" type= "text/css" rel="stylesheet" />
+
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>rootpy</h1>
-        <p></p>
+  
+  
+  <div class=indexwrapper>
+  
+  
+    <a href="http://github.com/rootpy/rootpy"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
 
-        <p class="view"><a href="https://github.com/rootpy/rootpy">View the Project on GitHub <small>rootpy/rootpy</small></a></p>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="start.html" title="Getting Started"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">rootpy 0.7.0-a0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="rootpy">
+<h1>rootpy<a class="headerlink" href="#rootpy" title="Permalink to this headline">¶</a></h1>
+<p><cite>rootpy</cite> provides a more feature-rich and pythonic interface
+with the <a class="reference external" href="http://root.cern.ch/">ROOT</a> libraries on top of
+the existing <a class="reference external" href="http://root.cern.ch/drupal/content/pyroot">PyROOT</a> bindings.</p>
+<p>More specifically, <cite>rootpy</cite> provides:</p>
+<ul class="simple">
+<li>easier manipulation of trees, histograms, graphs, cuts,
+and TVector/TLorentzVectors. <cite>rootpy</cite> provides classes that
+inherit from these ROOT classes and implement the Python
+arithmetic operators.</li>
+<li>an easy way to create and read ROOT TTrees and a mechanism for defining
+objects and collections of objects whose attributes are TTree branches.
+You may also decorate TTree objects with additional methods and attributes.
+See examples/tree.</li>
+<li>easy navigation through TFiles. <cite>rootpy</cite> wraps TFile and implements the
+natural naming convention so that objects may be retrieved with
+myFile.someDirectory.treeName, for example.</li>
+<li>an interface between ROOT and
+<a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib</a>.
+Don&#8217;t like the way your plots look in ROOT? Simply use <cite>rootpy</cite> to
+plot your ROOT histograms or graphs with matplotlib instead.</li>
+<li>conversion of ROOT TFiles containing TTrees into
+<a class="reference external" href="http://www.hdfgroup.org/HDF5/">HDF5</a> format with
+<a class="reference external" href="http://www.pytables.org/">PyTables</a>.</li>
+<li>conversion of TTrees into <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html">ndarrays</a></li>
+</ul>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="start.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="start.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="start.html#install">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="start.html#getting-the-latest-source">Getting the latest source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="start.html#watch-rootpy-do-tricks">Watch rootpy do tricks</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/modules.html">rootpy</a></li>
+</ul>
+</div>
+</div>
 
 
-        <ul>
-          <li><a href="https://github.com/rootpy/rootpy/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/rootpy/rootpy/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/rootpy/rootpy">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/rootpy">rootpy</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="start.html" title="next chapter">Getting Started</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
+  <div class="footer">
+    &copy; Copyright 2011, Noel Dawe, Jeff Klukas.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </div>
+  
   </body>
 </html>

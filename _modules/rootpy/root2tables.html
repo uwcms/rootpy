@@ -1,0 +1,150 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>rootpy.root2tables &mdash; rootpy 0.7.0-a0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.7.0-a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="rootpy 0.7.0-a0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../_static/clean_small.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+  
+    <a href="http://github.com/rootpy/rootpy"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">rootpy 0.7.0-a0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for rootpy.root2tables</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module handles conversion of ROOT&#39;s TFile and</span>
+<span class="sd">contained TTrees into HDF5 format with PyTables</span>
+
+<span class="sd">Also see scripts/root2hd5</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">tables</span>
+<span class="kn">import</span> <span class="nn">ROOT</span>
+<span class="kn">from</span> <span class="nn">.progressbar</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.io</span> <span class="kn">import</span> <span class="nb">open</span> <span class="k">as</span> <span class="n">ropen</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">.tree</span> <span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">.root2array</span> <span class="kn">import</span> <span class="n">tree_to_recarray</span>
+
+<div class="viewcode-block" id="convert"><a class="viewcode-back" href="../../reference/rootpy.html#rootpy.root2tables.convert">[docs]</a><span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">rfile</span><span class="p">,</span> <span class="n">hfile</span><span class="p">,</span> <span class="n">rpath</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hfile</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="n">hfile</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">openFile</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">hfile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&quot;w&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Data&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rfile</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="n">rfile</span> <span class="o">=</span> <span class="n">ropen</span><span class="p">(</span><span class="n">rfile</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">treenames</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">rfile</span><span class="p">,</span> <span class="n">rpath</span><span class="p">,</span> <span class="n">class_pattern</span><span class="o">=</span><span class="s">&#39;TTree&#39;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dirpath</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">treenames</span><span class="p">:</span> <span class="c"># skip root</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dirnames</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">treenames</span><span class="p">:</span> <span class="c"># skip directories w/o trees or subdirs</span>
+            <span class="k">continue</span>
+
+        <span class="n">where_group</span> <span class="o">=</span> <span class="s">&#39;/&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dirpath</span><span class="p">)</span>
+        <span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">dirpath</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">current_dir</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">hfile</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">hfile</span><span class="o">.</span><span class="n">createGroup</span><span class="p">(</span><span class="n">where_group</span><span class="p">,</span> <span class="n">current_dir</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="n">stream</span><span class="p">,</span> <span class="s">&quot;Will convert </span><span class="si">%i</span><span class="s"> tree(s) in this directory&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">treenames</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">tree</span><span class="p">,</span> <span class="n">treename</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">rfile</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">treename</span><span class="p">)),</span> <span class="n">treename</span><span class="p">)</span> <span class="k">for</span> <span class="n">treename</span> <span class="ow">in</span> <span class="n">treenames</span><span class="p">]:</span>
+
+            <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="n">stream</span><span class="p">,</span> <span class="s">&quot;Converting </span><span class="si">%s</span><span class="s"> with </span><span class="si">%i</span><span class="s"> entries ...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">treename</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">GetEntries</span><span class="p">())</span>
+
+            <span class="n">recarray</span> <span class="o">=</span> <span class="n">tree_to_recarray</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">hfile</span><span class="o">.</span><span class="n">createTable</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">treename</span><span class="p">,</span> <span class="n">recarray</span><span class="p">,</span> <span class="n">tree</span><span class="o">.</span><span class="n">GetTitle</span><span class="p">())</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2011, Noel Dawe, Jeff Klukas.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>

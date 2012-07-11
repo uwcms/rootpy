@@ -1,0 +1,169 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>stats Package &mdash; rootpy 0.7.0-a0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.7.0-a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="rootpy 0.7.0-a0 documentation" href="../index.html" />
+    <link rel="up" title="math Package" href="rootpy.math.html" />
+    <link rel="next" title="networking Package" href="rootpy.networking.html" />
+    <link rel="prev" title="physics Package" href="rootpy.math.physics.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/clean_small.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+  
+    <a href="http://github.com/rootpy/rootpy"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rootpy.networking.html" title="networking Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rootpy.math.physics.html" title="physics Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">rootpy 0.7.0-a0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >rootpy</a> &raquo;</li>
+          <li><a href="rootpy.html" >rootpy Package</a> &raquo;</li>
+          <li><a href="rootpy.math.html" accesskey="U">math Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="stats-package">
+<h1>stats Package<a class="headerlink" href="#stats-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-rootpy.math.stats.correlation">
+<span id="correlation-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">correlation</span></tt> Module<a class="headerlink" href="#module-rootpy.math.stats.correlation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="rootpy.math.stats.correlation.correlation_plot">
+<tt class="descclassname">rootpy.math.stats.correlation.</tt><tt class="descname">correlation_plot</tt><big>(</big><em>X</em>, <em>weights</em>, <em>names</em>, <em>output_name</em>, <em>format='png'</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/stats/correlation.html#correlation_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.stats.correlation.correlation_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will draw an lower-triangular correlation plot</p>
+<p><a class="reference external" href="http://stackoverflow.com/questions/2318529/plotting-only-upper-lower-triangle-of-a-heatmap">http://stackoverflow.com/questions/2318529/plotting-only-upper-lower-triangle-of-a-heatmap</a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.math.stats.qqplot">
+<span id="qqplot-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">qqplot</span></tt> Module<a class="headerlink" href="#module-rootpy.math.stats.qqplot" title="Permalink to this headline">¶</a></h2>
+<p>Taken from exmaple by Zhiyi Liu, <a class="reference external" href="mailto:zhiyil&#37;&#52;&#48;fnal&#46;gov">zhiyil<span>&#64;</span>fnal<span>&#46;</span>gov</a>
+here: <a class="reference external" href="http://root.cern.ch/phpBB3/viewtopic.php?f=3&amp;t=6865">http://root.cern.ch/phpBB3/viewtopic.php?f=3&amp;t=6865</a>
+and converted into Python</p>
+<dl class="function">
+<dt id="rootpy.math.stats.qqplot.critical_value">
+<tt class="descclassname">rootpy.math.stats.qqplot.</tt><tt class="descname">critical_value</tt><big>(</big><em>n</em>, <em>p</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/stats/qqplot.html#critical_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.stats.qqplot.critical_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>the routine is used to calculate critical value given
+n and p, confidential level = 1 - p.
+Original Reference:
+<a class="reference external" href="http://velveeta.che.wisc.edu/octave/lists/archive//octave-sources.2003/msg00031.html">http://velveeta.che.wisc.edu/octave/lists/archive//octave-sources.2003/msg00031.html</a>
+I just checked it, but it is not available now...</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.math.stats.qqplot.effective_sample_size">
+<tt class="descclassname">rootpy.math.stats.qqplot.</tt><tt class="descname">effective_sample_size</tt><big>(</big><em>h</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/stats/qqplot.html#effective_sample_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.stats.qqplot.effective_sample_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculate effective sample size for a histogram
+same way as ROOT does.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.math.stats.qqplot.qqplot">
+<tt class="descclassname">rootpy.math.stats.qqplot.</tt><tt class="descname">qqplot</tt><big>(</big><em>h1</em>, <em>h2</em>, <em>quantiles=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/stats/qqplot.html#qqplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.stats.qqplot.qqplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Graph of a QQ plot and confidence band</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">stats Package</a><ul>
+<li><a class="reference internal" href="#module-rootpy.math.stats.correlation"><tt class="docutils literal"><span class="pre">correlation</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.math.stats.qqplot"><tt class="docutils literal"><span class="pre">qqplot</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">rootpy</a><ul>
+  <li><a href="rootpy.html">rootpy Package</a><ul>
+  <li><a href="rootpy.math.html">math Package</a><ul>
+      <li>Previous: <a href="rootpy.math.physics.html" title="previous chapter">physics Package</a></li>
+      <li>Next: <a href="rootpy.networking.html" title="next chapter">networking Package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/rootpy.math.stats.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2011, Noel Dawe, Jeff Klukas.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>

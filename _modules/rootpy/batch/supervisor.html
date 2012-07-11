@@ -1,0 +1,392 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>rootpy.batch.supervisor &mdash; rootpy 0.7.0-a0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.7.0-a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="rootpy 0.7.0-a0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../../_static/clean_small.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+  
+    <a href="http://github.com/rootpy/rootpy"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">rootpy 0.7.0-a0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for rootpy.batch.supervisor</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">ROOT</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span><span class="p">,</span> <span class="n">itemgetter</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">..tree.filtering</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">common</span>
+<span class="kn">from</span> <span class="nn">..io</span> <span class="kn">import</span> <span class="nb">open</span> <span class="k">as</span> <span class="n">ropen</span>
+<span class="kn">from</span> <span class="nn">..plotting</span> <span class="kn">import</span> <span class="n">Hist</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">multilogging</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">signal</span>
+<span class="kn">from</span> <span class="nn">.student</span> <span class="kn">import</span> <span class="n">Student</span>
+<span class="kn">import</span> <span class="nn">cPickle</span> <span class="kn">as</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">pstats</span>
+<span class="kn">import</span> <span class="nn">cStringIO</span> <span class="kn">as</span> <span class="nn">StringIO</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+
+<span class="n">NCPUS</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="QueueFeeder"><a class="viewcode-back" href="../../../reference/rootpy.batch.html#rootpy.batch.supervisor.QueueFeeder">[docs]</a><span class="k">class</span> <span class="nc">QueueFeeder</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">numclients</span><span class="p">,</span> <span class="n">sentinel</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+        <span class="n">Process</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">connection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objects</span> <span class="o">=</span> <span class="n">objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numclients</span> <span class="o">=</span> <span class="n">numclients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sentinel</span> <span class="o">=</span> <span class="n">sentinel</span>
+
+<div class="viewcode-block" id="QueueFeeder.run"><a class="viewcode-back" href="../../../reference/rootpy.batch.html#rootpy.batch.supervisor.QueueFeeder.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c"># ignore sigterm signal and let parent take care of this</span>
+        <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIG_IGN</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">cancel_join_thread</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objects</span> <span class="o">=</span> <span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">sentinel</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">numclients</span><span class="p">)</span> <span class="o">+</span> \
+                       <span class="bp">self</span><span class="o">.</span><span class="n">objects</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">poll</span><span class="p">():</span>
+                <span class="k">print</span> <span class="s">&quot;queue feeder is shutting down...&quot;</span>
+                <span class="k">break</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">queues</span><span class="o">.</span><span class="n">Queue</span><span class="o">.</span><span class="n">Full</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">print</span> <span class="s">&quot;queue feeder is closing the queue...&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">print</span> <span class="s">&quot;queue feeder will now terminate&quot;</span>
+
+</div></div>
+<div class="viewcode-block" id="Supervisor"><a class="viewcode-back" href="../../../reference/rootpy.batch.html#rootpy.batch.supervisor.Supervisor">[docs]</a><span class="k">class</span> <span class="nc">Supervisor</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student</span><span class="p">,</span> <span class="n">outputname</span><span class="p">,</span>
+                 <span class="n">files</span><span class="p">,</span>
+                 <span class="n">metadata</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">nstudents</span><span class="o">=</span><span class="n">NCPUS</span><span class="p">,</span>
+                 <span class="n">connection</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">gridmode</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">queuemode</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                 <span class="n">nice</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">profile</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">Process</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">student</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="c"># remove .py extension if present</span>
+            <span class="n">student</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">student</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">print</span> <span class="s">&quot;importing </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="n">student</span>
+            <span class="k">exec</span> <span class="s">&quot;from </span><span class="si">%s</span><span class="s"> import </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="n">student</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">student</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="n">Student</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> must be a subclass of Student&quot;</span> <span class="o">%</span> <span class="n">student</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">files</span><span class="p">[:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputname</span> <span class="o">=</span> <span class="s">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">outputname</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gridmode</span> <span class="o">=</span> <span class="n">gridmode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nice</span> <span class="o">=</span> <span class="n">nice</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridmode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nstudents</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">queuemode</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nstudents</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">nstudents</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queuemode</span> <span class="o">=</span> <span class="n">queuemode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">student_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">connection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span>
+
+<div class="viewcode-block" id="Supervisor.run"><a class="viewcode-back" href="../../../reference/rootpy.batch.html#rootpy.batch.supervisor.Supervisor.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c"># ignore sigterm signal and let parent take care of this</span>
+        <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIG_IGN</span><span class="p">)</span>
+
+        <span class="n">ROOT</span><span class="o">.</span><span class="n">gROOT</span><span class="o">.</span><span class="n">SetBatch</span><span class="p">()</span>
+
+        <span class="c"># logging</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logging_queue</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listener</span> <span class="o">=</span> <span class="n">multilogging</span><span class="o">.</span><span class="n">Listener</span><span class="p">(</span><span class="s">&quot;supervisor-</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">.log&quot;</span> <span class="o">%</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputname</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_queue</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listener</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="n">h</span> <span class="o">=</span> <span class="n">multilogging</span><span class="o">.</span><span class="n">QueueHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logging_queue</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;Supervisor&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridmode</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">multilogging</span><span class="o">.</span><span class="n">stdout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">multilogging</span><span class="o">.</span><span class="n">stderr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">queuemode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file_queue</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nstudents</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file_queue_feeder_conn</span><span class="p">,</span> <span class="n">connection</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pipe</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file_queue_feeder</span> <span class="o">=</span> <span class="n">QueueFeeder</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
+                                                 <span class="n">objects</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">,</span>
+                                                 <span class="n">queue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">file_queue</span><span class="p">,</span>
+                                                 <span class="n">numclients</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nstudents</span><span class="p">,</span>
+                                                 <span class="n">sentinel</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_queue</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&quot;Will run on </span><span class="si">%i</span><span class="s"> file(s):&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">filename</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hire_students</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">supervise</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">publish</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_tb</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">queuemode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logging_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listener</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="k">print</span> <span class="s">&quot;Done&quot;</span>
+</div>
+<div class="viewcode-block" id="Supervisor.hire_students"><a class="viewcode-back" href="../../../reference/rootpy.batch.html#rootpy.batch.supervisor.Supervisor.hire_students">[docs]</a>    <span class="k">def</span> <span class="nf">hire_students</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">queuemode</span><span class="p">:</span>
+            <span class="n">students</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_queue</span><span class="p">,</span>
+                    <span class="n">output_queue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_queue</span><span class="p">,</span>
+                    <span class="n">logging_queue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_queue</span><span class="p">,</span>
+                    <span class="n">gridmode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridmode</span><span class="p">,</span>
+                    <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+                    <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span>
+                    <span class="n">nice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nice</span><span class="p">,</span>
+                    <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span>
+                <span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nstudents</span><span class="p">)</span> <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># deal out files</span>
+            <span class="n">filesets</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nstudents</span><span class="p">)]</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">fileset</span> <span class="ow">in</span> <span class="n">filesets</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">fileset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">break</span>
+            <span class="n">students</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">files</span> <span class="o">=</span> <span class="n">fileset</span><span class="p">,</span>
+                    <span class="n">output_queue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_queue</span><span class="p">,</span>
+                    <span class="n">logging_queue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_queue</span><span class="p">,</span>
+                    <span class="n">gridmode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridmode</span><span class="p">,</span>
+                    <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+                    <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span>
+                    <span class="n">nice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nice</span><span class="p">,</span>
+                    <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span>
+                <span class="p">)</span> <span class="k">for</span> <span class="n">fileset</span> <span class="ow">in</span> <span class="n">filesets</span> <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_table</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">p</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">students</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="Supervisor.supervise"><a class="viewcode-back" href="../../../reference/rootpy.batch.html#rootpy.batch.supervisor.Supervisor.supervise">[docs]</a>    <span class="k">def</span> <span class="nf">supervise</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">queuemode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file_queue_feeder</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">student</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_table</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">student</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_table</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">poll</span><span class="p">():</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">msg</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="k">print</span> <span class="s">&quot;will now terminate...&quot;</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">queuemode</span><span class="p">:</span>
+                            <span class="c"># tell queue feeder to quit</span>
+                            <span class="k">print</span> <span class="s">&quot;shutting down file queue...&quot;</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">file_queue_feeder_conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+                            <span class="k">print</span> <span class="s">&quot;joining queue feeder...&quot;</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">file_queue_feeder</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+                            <span class="k">print</span> <span class="s">&quot;queue feeder is terminated&quot;</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">file_queue_feeder_conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                        <span class="k">print</span> <span class="s">&quot;terminating students...&quot;</span>
+                        <span class="k">for</span> <span class="n">student</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_table</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                            <span class="n">student</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+                        <span class="k">return</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_queue</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+                <span class="nb">id</span><span class="p">,</span> <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="n">process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_table</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_table</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">exitcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">student_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Supervisor.publish"><a class="viewcode-back" href="../../../reference/rootpy.batch.html#rootpy.batch.supervisor.Supervisor.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">student_outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">all_filters</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">:</span>
+                <span class="n">profiles</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">filters</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">profile</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">student_outputs</span><span class="p">:</span>
+                    <span class="n">all_filters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span>
+                    <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+                    <span class="n">profiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+                <span class="n">profile_output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+                <span class="n">profile_stats</span> <span class="o">=</span> <span class="n">pstats</span><span class="o">.</span><span class="n">Stats</span><span class="p">(</span><span class="n">profiles</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">stream</span><span class="o">=</span><span class="n">profile_output</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">profiles</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                    <span class="n">profile_stats</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+                <span class="n">profile_stats</span><span class="o">.</span><span class="n">sort_stats</span><span class="p">(</span><span class="s">&#39;cumulative&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">print_stats</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+                <span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">Profiling Results: </span><span class="se">\n</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">profile_output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">profiles</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">filters</span><span class="p">,</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">student_outputs</span><span class="p">:</span>
+                    <span class="n">all_filters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span>
+                    <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+            <span class="n">write_cutflows</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">if</span> <span class="n">all_filters</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">write_cutflows</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">===== Cut-flow of filters for dataset </span><span class="si">%s</span><span class="s">: ====</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputname</span>
+
+                <span class="n">merged_filters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">name</span><span class="p">,</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">FilterList</span><span class="o">.</span><span class="n">merge</span><span class="p">,</span>
+                                  <span class="p">[</span><span class="n">all_filters</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+                                      <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_filters</span><span class="p">))]))</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span>
+                                      <span class="n">all_filters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">filterlist</span> <span class="ow">in</span> <span class="n">merged_filters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="si">%s</span><span class="s"> cut-flow</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">filterlist</span><span class="p">)</span>
+
+            <span class="n">outputname</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">.root&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputname</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outputname</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">outputname</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">outputname</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">write_cutflows</span><span class="p">:</span>
+                <span class="c"># write cut-flow in ROOT file as TH1</span>
+                <span class="k">with</span> <span class="n">ropen</span><span class="p">(</span><span class="n">outputname</span><span class="p">,</span> <span class="s">&#39;UPDATE&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">filterlist</span> <span class="ow">in</span> <span class="n">merged_filters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">cutflow</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filterlist</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span>
+                                       <span class="nb">len</span><span class="p">(</span><span class="n">filterlist</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1.5</span><span class="p">,</span>
+                                       <span class="n">name</span><span class="o">=</span><span class="s">&quot;cutflow_</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">,</span>
+                                       <span class="n">title</span><span class="o">=</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> cut-flow&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">,</span>
+                                       <span class="nb">type</span><span class="o">=</span><span class="s">&#39;d&#39;</span><span class="p">)</span>
+                        <span class="n">cutflow</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">filterlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">total</span>
+                        <span class="n">cutflow</span><span class="o">.</span><span class="n">GetXaxis</span><span class="p">()</span><span class="o">.</span><span class="n">SetBinLabel</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="nb">filter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filterlist</span><span class="p">):</span>
+                            <span class="n">cutflow</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">filter</span><span class="o">.</span><span class="n">passing</span>
+                            <span class="n">cutflow</span><span class="o">.</span><span class="n">GetXaxis</span><span class="p">()</span><span class="o">.</span><span class="n">SetBinLabel</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">filter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                        <span class="n">cutflow</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2011, Noel Dawe, Jeff Klukas.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>

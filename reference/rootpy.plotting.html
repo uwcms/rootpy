@@ -1,0 +1,1683 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>plotting Package &mdash; rootpy 0.7.0-a0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.7.0-a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="rootpy 0.7.0-a0 documentation" href="../index.html" />
+    <link rel="up" title="rootpy Package" href="rootpy.html" />
+    <link rel="next" title="root2array Package" href="rootpy.root2array.html" />
+    <link rel="prev" title="networking Package" href="rootpy.networking.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/clean_small.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+  
+    <a href="http://github.com/rootpy/rootpy"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rootpy.root2array.html" title="root2array Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rootpy.networking.html" title="networking Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">rootpy 0.7.0-a0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >rootpy</a> &raquo;</li>
+          <li><a href="rootpy.html" accesskey="U">rootpy Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="plotting-package">
+<h1>plotting Package<a class="headerlink" href="#plotting-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">plotting</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-rootpy.plotting"></span></div>
+<div class="section" id="module-rootpy.plotting.canvas">
+<span id="canvas-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt> Module<a class="headerlink" href="#module-rootpy.plotting.canvas" title="Permalink to this headline">¶</a></h2>
+<p>This module implements python classes which inherit from
+and extend the functionality of the ROOT canvas classes.</p>
+<dl class="class">
+<dt id="rootpy.plotting.canvas.Canvas">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.canvas.</tt><tt class="descname">Canvas</tt><big>(</big><em>width=800</em>, <em>height=600</em>, <em>xpos=0</em>, <em>ypos=0</em>, <em>name=None</em>, <em>title=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/canvas.html#Canvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.canvas.Canvas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rootpy.html#rootpy.core.Object" title="rootpy.core.Object"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.core.Object</span></tt></a>, <a class="reference internal" href="#rootpy.plotting.canvas.PadMixin" title="rootpy.plotting.canvas.PadMixin"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.canvas.PadMixin</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TCanvas</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.canvas.Pad">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.canvas.</tt><tt class="descname">Pad</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/canvas.html#Pad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.canvas.Pad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rootpy.html#rootpy.core.Object" title="rootpy.core.Object"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.core.Object</span></tt></a>, <a class="reference internal" href="#rootpy.plotting.canvas.PadMixin" title="rootpy.plotting.canvas.PadMixin"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.canvas.PadMixin</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TPad</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.canvas.PadMixin">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.canvas.</tt><tt class="descname">PadMixin</tt><a class="reference internal" href="../_modules/rootpy/plotting/canvas.html#PadMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.canvas.PadMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="rootpy.plotting.canvas.PadMixin.Clear">
+<tt class="descname">Clear</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/canvas.html#PadMixin.Clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.canvas.PadMixin.Clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.canvas.PadMixin.OwnMembers">
+<tt class="descname">OwnMembers</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/canvas.html#PadMixin.OwnMembers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.canvas.PadMixin.OwnMembers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.canvas.PadMixin.cd">
+<tt class="descname">cd</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/canvas.html#PadMixin.cd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.canvas.PadMixin.cd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.plotting.core">
+<span id="core-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">core</span></tt> Module<a class="headerlink" href="#module-rootpy.plotting.core" title="Permalink to this headline">¶</a></h2>
+<p>This module contains base classes defining core funcionality</p>
+<dl class="class">
+<dt id="rootpy.plotting.core.Plottable">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.core.</tt><tt class="descname">Plottable</tt><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This is a mixin to provide additional attributes for plottable classes
+and to override ROOT TAttXXX and Draw methods.</p>
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.Draw">
+<tt class="descname">Draw</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.Draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.Draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.GetFillColor">
+<tt class="descname">GetFillColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.GetFillColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.GetFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.GetFillStyle">
+<tt class="descname">GetFillStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.GetFillStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.GetFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.GetLineColor">
+<tt class="descname">GetLineColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.GetLineColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.GetLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.GetLineStyle">
+<tt class="descname">GetLineStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.GetLineStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.GetLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.GetMarkerColor">
+<tt class="descname">GetMarkerColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.GetMarkerColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.GetMarkerColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.GetMarkerStyle">
+<tt class="descname">GetMarkerStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.GetMarkerStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.GetMarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.SetColor">
+<tt class="descname">SetColor</tt><big>(</big><em>color</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.SetColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.SetColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>Set all color attributes with one method call.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.SetFillColor">
+<tt class="descname">SetFillColor</tt><big>(</big><em>color</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.SetFillColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.SetFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.SetFillStyle">
+<tt class="descname">SetFillStyle</tt><big>(</big><em>style</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.SetFillStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.SetFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any fill style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.FillStyle" title="rootpy.plotting.style.FillStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.FillStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.SetLineColor">
+<tt class="descname">SetLineColor</tt><big>(</big><em>color</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.SetLineColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.SetLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.SetLineStyle">
+<tt class="descname">SetLineStyle</tt><big>(</big><em>style</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.SetLineStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.SetLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any line style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.LineStyle" title="rootpy.plotting.style.LineStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.LineStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.SetMarkerColor">
+<tt class="descname">SetMarkerColor</tt><big>(</big><em>color</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.SetMarkerColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.SetMarkerColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.SetMarkerStyle">
+<tt class="descname">SetMarkerStyle</tt><big>(</big><em>style</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.SetMarkerStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.SetMarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any marker style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.MarkerStyle" title="rootpy.plotting.style.MarkerStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.MarkerStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.decorate">
+<tt class="descname">decorate</tt><big>(</big><em>template_object=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.decorate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.decorate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.core.Plottable.decorators">
+<tt class="descname">decorators</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#Plottable.decorators"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.Plottable.decorators" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.plotting.core.dim">
+<tt class="descclassname">rootpy.plotting.core.</tt><tt class="descname">dim</tt><big>(</big><em>hist</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/core.html#dim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.core.dim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.plotting.graph">
+<span id="graph-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">graph</span></tt> Module<a class="headerlink" href="#module-rootpy.plotting.graph" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rootpy.plotting.graph.Graph">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.graph.</tt><tt class="descname">Graph</tt><big>(</big><em>npoints=0</em>, <em>hist=None</em>, <em>efficiency=None</em>, <em>file=None</em>, <em>name=None</em>, <em>title=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rootpy.plotting.core.Plottable" title="rootpy.plotting.core.Plottable"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.core.Plottable</span></tt></a>, <a class="reference internal" href="rootpy.html#rootpy.core.NamelessConstructorObject" title="rootpy.core.NamelessConstructorObject"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.core.NamelessConstructorObject</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TGraphAsymmErrors</span></tt></p>
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.Crop">
+<tt class="descname">Crop</tt><big>(</big><em>x1</em>, <em>x2</em>, <em>copy=False</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.Crop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.Crop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove points which lie outside of [x1, x2].
+If x1 and/or x2 is below/above the current lowest/highest x-coordinates,
+additional points are added to the graph using a linear interpolation</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rootpy.plotting.graph.Graph.DIM">
+<tt class="descname">DIM</tt><em class="property"> = 1</em><a class="headerlink" href="#rootpy.plotting.graph.Graph.DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.GetMaximum">
+<tt class="descname">GetMaximum</tt><big>(</big><em>include_error=False</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.GetMaximum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.GetMaximum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.GetMinimum">
+<tt class="descname">GetMinimum</tt><big>(</big><em>include_error=False</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.GetMinimum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.GetMinimum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.Integrate">
+<tt class="descname">Integrate</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.Integrate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.Integrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integrate using the trapazoidal method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.Invert">
+<tt class="descname">Invert</tt><big>(</big><em>copy=False</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.Invert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.Invert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interchange the x and y coordinates of all points</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.Reverse">
+<tt class="descname">Reverse</tt><big>(</big><em>copy=False</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.Reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.Reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse the order of the points</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.Scale">
+<tt class="descname">Scale</tt><big>(</big><em>value</em>, <em>copy=False</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.Scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.Scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale the graph vertically by value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.Shift">
+<tt class="descname">Shift</tt><big>(</big><em>value</em>, <em>copy=False</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.Shift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.Shift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shift the graph left or right by value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.Stretch">
+<tt class="descname">Stretch</tt><big>(</big><em>value</em>, <em>copy=False</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.Stretch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.Stretch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stretch the graph horizontally by a factor of value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.clone">
+<tt class="descname">clone</tt><big>(</big><em>name=None</em>, <em>title=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.clone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="rootpy.plotting.graph.Graph.divide">
+<em class="property">static </em><tt class="descname">divide</tt><big>(</big><em>left</em>, <em>right</em>, <em>consistency=True</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.divide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.divide" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.draw">
+<tt class="descname">draw</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.getFillColor">
+<tt class="descname">getFillColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.getFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.getFillStyle">
+<tt class="descname">getFillStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.getFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.getLineColor">
+<tt class="descname">getLineColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.getLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.getLineStyle">
+<tt class="descname">getLineStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.getLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.getMarkerColor">
+<tt class="descname">getMarkerColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.getMarkerColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.getMarkerStyle">
+<tt class="descname">getMarkerStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.getMarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.getMaximum">
+<tt class="descname">getMaximum</tt><big>(</big><em>include_error=False</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.getMaximum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.getMinimum">
+<tt class="descname">getMinimum</tt><big>(</big><em>include_error=False</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.getMinimum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.maximum">
+<tt class="descname">maximum</tt><big>(</big><em>include_error=False</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.maximum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.maximum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.minimum">
+<tt class="descname">minimum</tt><big>(</big><em>include_error=False</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.minimum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.minimum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.setErrorsFromHist">
+<tt class="descname">setErrorsFromHist</tt><big>(</big><em>hist</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.setErrorsFromHist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.setErrorsFromHist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.setFillColor">
+<tt class="descname">setFillColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.setFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.setFillStyle">
+<tt class="descname">setFillStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.setFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any fill style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.FillStyle" title="rootpy.plotting.style.FillStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.FillStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.setLineColor">
+<tt class="descname">setLineColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.setLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.setLineStyle">
+<tt class="descname">setLineStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.setLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any line style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.LineStyle" title="rootpy.plotting.style.LineStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.LineStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.setMarkerColor">
+<tt class="descname">setMarkerColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.setMarkerColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.setMarkerStyle">
+<tt class="descname">setMarkerStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph.setMarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any marker style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.MarkerStyle" title="rootpy.plotting.style.MarkerStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.MarkerStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.x">
+<tt class="descname">x</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.xMax">
+<tt class="descname">xMax</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.xMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.xMax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.xMin">
+<tt class="descname">xMin</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.xMin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.xMin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.xedges">
+<tt class="descname">xedges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.xedges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.xedges" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.xedgesh">
+<tt class="descname">xedgesh</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.xedgesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.xedgesh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.xedgesl">
+<tt class="descname">xedgesl</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.xedgesl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.xedgesl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.xerr">
+<tt class="descname">xerr</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.xerr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.xerr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.xerravg">
+<tt class="descname">xerravg</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.xerravg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.xerravg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.xerrh">
+<tt class="descname">xerrh</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.xerrh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.xerrh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.xerrl">
+<tt class="descname">xerrl</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.xerrl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.xerrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.y">
+<tt class="descname">y</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.yMax">
+<tt class="descname">yMax</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.yMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.yMax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.yMin">
+<tt class="descname">yMin</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.yMin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.yMin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.yerr">
+<tt class="descname">yerr</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.yerr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.yerr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.yerravg">
+<tt class="descname">yerravg</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.yerravg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.yerravg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.yerrh">
+<tt class="descname">yerrh</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.yerrh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.yerrh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph.yerrl">
+<tt class="descname">yerrl</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph.yerrl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph.yerrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.graph.Graph2D">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.graph.</tt><tt class="descname">Graph2D</tt><big>(</big><em>npoints=0</em>, <em>hist=None</em>, <em>efficiency=None</em>, <em>file=None</em>, <em>name=None</em>, <em>title=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rootpy.plotting.core.Plottable" title="rootpy.plotting.core.Plottable"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.core.Plottable</span></tt></a>, <a class="reference internal" href="rootpy.html#rootpy.core.NamelessConstructorObject" title="rootpy.core.NamelessConstructorObject"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.core.NamelessConstructorObject</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TGraph2D</span></tt></p>
+<dl class="attribute">
+<dt id="rootpy.plotting.graph.Graph2D.DIM">
+<tt class="descname">DIM</tt><em class="property"> = 2</em><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.DIM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.clone">
+<tt class="descname">clone</tt><big>(</big><em>name=None</em>, <em>title=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.clone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.draw">
+<tt class="descname">draw</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.getFillColor">
+<tt class="descname">getFillColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.getFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.getFillStyle">
+<tt class="descname">getFillStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.getFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.getLineColor">
+<tt class="descname">getLineColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.getLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.getLineStyle">
+<tt class="descname">getLineStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.getLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.getMarkerColor">
+<tt class="descname">getMarkerColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.getMarkerColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.getMarkerStyle">
+<tt class="descname">getMarkerStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.getMarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.setFillColor">
+<tt class="descname">setFillColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.setFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.setFillStyle">
+<tt class="descname">setFillStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.setFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any fill style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.FillStyle" title="rootpy.plotting.style.FillStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.FillStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.setLineColor">
+<tt class="descname">setLineColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.setLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.setLineStyle">
+<tt class="descname">setLineStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.setLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any line style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.LineStyle" title="rootpy.plotting.style.LineStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.LineStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.setMarkerColor">
+<tt class="descname">setMarkerColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.setMarkerColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.setMarkerStyle">
+<tt class="descname">setMarkerStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.setMarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any marker style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.MarkerStyle" title="rootpy.plotting.style.MarkerStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.MarkerStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.x">
+<tt class="descname">x</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph2D.x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.y">
+<tt class="descname">y</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph2D.y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.graph.Graph2D.z">
+<tt class="descname">z</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/graph.html#Graph2D.z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.graph.Graph2D.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.plotting.hist">
+<span id="hist-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">hist</span></tt> Module<a class="headerlink" href="#module-rootpy.plotting.hist" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="rootpy.plotting.hist.DomainError">
+<em class="property">exception </em><tt class="descclassname">rootpy.plotting.hist.</tt><tt class="descname">DomainError</tt><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#DomainError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.DomainError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.hist.Efficiency">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.hist.</tt><tt class="descname">Efficiency</tt><big>(</big><em>passed</em>, <em>total</em>, <em>name=None</em>, <em>title=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#Efficiency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.Efficiency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rootpy.plotting.core.Plottable" title="rootpy.plotting.core.Plottable"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.core.Plottable</span></tt></a>, <a class="reference internal" href="rootpy.html#rootpy.core.Object" title="rootpy.core.Object"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.core.Object</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TEfficiency</span></tt></p>
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.GetGraph">
+<tt class="descname">GetGraph</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#Efficiency.GetGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.GetGraph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.clone">
+<tt class="descname">clone</tt><big>(</big><em>name=None</em>, <em>title=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.clone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.draw">
+<tt class="descname">draw</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.errors">
+<tt class="descname">errors</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#Efficiency.errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.errors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.getFillColor">
+<tt class="descname">getFillColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.getFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.getFillStyle">
+<tt class="descname">getFillStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.getFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.getLineColor">
+<tt class="descname">getLineColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.getLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.getLineStyle">
+<tt class="descname">getLineStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.getLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.getMarkerColor">
+<tt class="descname">getMarkerColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.getMarkerColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.getMarkerStyle">
+<tt class="descname">getMarkerStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.getMarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.setFillColor">
+<tt class="descname">setFillColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.setFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.setFillStyle">
+<tt class="descname">setFillStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.setFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any fill style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.FillStyle" title="rootpy.plotting.style.FillStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.FillStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.setLineColor">
+<tt class="descname">setLineColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.setLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.setLineStyle">
+<tt class="descname">setLineStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.setLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any line style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.LineStyle" title="rootpy.plotting.style.LineStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.LineStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.setMarkerColor">
+<tt class="descname">setMarkerColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.setMarkerColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.Efficiency.setMarkerStyle">
+<tt class="descname">setMarkerStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.hist.Efficiency.setMarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any marker style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.MarkerStyle" title="rootpy.plotting.style.MarkerStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.MarkerStyle</span></tt></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.hist.Hist">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.hist.</tt><tt class="descname">Hist</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#Hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.Hist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.hist._Hist</span></tt></p>
+<p>Returns a 1-dimensional Hist object which inherits from the associated
+ROOT.TH1* class (where * is C, S, I, F, or D depending on the type keyword argument)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.hist.Hist2D">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.hist.</tt><tt class="descname">Hist2D</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#Hist2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.Hist2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.hist._Hist2D</span></tt></p>
+<p>Returns a 2-dimensional Hist object which inherits from the associated
+ROOT.TH1* class (where * is C, S, I, F, or D depending on the type keyword argument)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.hist.Hist3D">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.hist.</tt><tt class="descname">Hist3D</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#Hist3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.Hist3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.hist._Hist3D</span></tt></p>
+<p>Returns a 3-dimensional Hist object which inherits from the associated
+ROOT.TH1* class (where * is C, S, I, F, or D depending on the type keyword argument)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.hist.HistStack">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.hist.</tt><tt class="descname">HistStack</tt><big>(</big><em>name=None</em>, <em>title=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rootpy.plotting.core.Plottable" title="rootpy.plotting.core.Plottable"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.core.Plottable</span></tt></a>, <a class="reference internal" href="rootpy.html#rootpy.core.Object" title="rootpy.core.Object"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.core.Object</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.THStack</span></tt></p>
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.Add">
+<tt class="descname">Add</tt><big>(</big><em>hist</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.Add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.Add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.Clone">
+<tt class="descname">Clone</tt><big>(</big><em>newName=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.Clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.Clone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.GetHists">
+<tt class="descname">GetHists</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.GetHists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.GetHists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.GetMaximum">
+<tt class="descname">GetMaximum</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.GetMaximum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.GetMaximum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.GetMinimum">
+<tt class="descname">GetMinimum</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.GetMinimum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.GetMinimum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.Integral">
+<tt class="descname">Integral</tt><big>(</big><em>start=None</em>, <em>end=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.Integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.Integral" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.Scale">
+<tt class="descname">Scale</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.Scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.Scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.lowerbound">
+<tt class="descname">lowerbound</tt><big>(</big><em>axis=1</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.lowerbound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.lowerbound" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.maximum">
+<tt class="descname">maximum</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.maximum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.maximum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.minimum">
+<tt class="descname">minimum</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.minimum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.minimum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.hist.HistStack.upperbound">
+<tt class="descname">upperbound</tt><big>(</big><em>axis=1</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/hist.html#HistStack.upperbound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.hist.HistStack.upperbound" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rootpy.plotting.hist.cls">
+<tt class="descclassname">rootpy.plotting.hist.</tt><tt class="descname">cls</tt><a class="headerlink" href="#rootpy.plotting.hist.cls" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#rootpy.plotting.hist.Hist3D" title="rootpy.plotting.hist.Hist3D"><tt class="xref py py-class docutils literal"><span class="pre">Hist3D</span></tt></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.plotting.legend">
+<span id="legend-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">legend</span></tt> Module<a class="headerlink" href="#module-rootpy.plotting.legend" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rootpy.plotting.legend.Legend">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.legend.</tt><tt class="descname">Legend</tt><big>(</big><em>nentries</em>, <em>pad=None</em>, <em>leftmargin=0</em>, <em>topmargin=0</em>, <em>rightmargin=0</em>, <em>bottommargin=0</em>, <em>entryheight=0.06</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/legend.html#Legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.legend.Legend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rootpy.html#rootpy.core.Object" title="rootpy.core.Object"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.core.Object</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TLegend</span></tt></p>
+<dl class="method">
+<dt id="rootpy.plotting.legend.Legend.AddEntry">
+<tt class="descname">AddEntry</tt><big>(</big><em>thing</em>, <em>legendstyle=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/legend.html#Legend.AddEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.legend.Legend.AddEntry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.legend.Legend.Draw">
+<tt class="descname">Draw</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/legend.html#Legend.Draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.legend.Legend.Draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.legend.Legend.Height">
+<tt class="descname">Height</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/legend.html#Legend.Height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.legend.Legend.Height" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.legend.Legend.Width">
+<tt class="descname">Width</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/legend.html#Legend.Width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.legend.Legend.Width" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.plotting.pyplot">
+<span id="pyplot-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">pyplot</span></tt> Module<a class="headerlink" href="#module-rootpy.plotting.pyplot" title="Permalink to this headline">¶</a></h2>
+<p>will implement matplotlib.pyplot-like module here</p>
+<dl class="function">
+<dt id="rootpy.plotting.pyplot.figure">
+<tt class="descclassname">rootpy.plotting.pyplot.</tt><tt class="descname">figure</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/pyplot.html#figure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.pyplot.figure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.plotting.root2matplotlib">
+<span id="root2matplotlib-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">root2matplotlib</span></tt> Module<a class="headerlink" href="#module-rootpy.plotting.root2matplotlib" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="rootpy.plotting.root2matplotlib.hist">
+<tt class="descclassname">rootpy.plotting.root2matplotlib.</tt><tt class="descname">hist</tt><big>(</big><em>hists</em>, <em>stacked=True</em>, <em>reverse=False</em>, <em>axes=None</em>, <em>xpadding=0</em>, <em>ypadding=0.1</em>, <em>snap_zero=True</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/root2matplotlib.html#hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.root2matplotlib.hist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a matplotlib &#8216;step&#8217; hist plot.</p>
+<p><em>hists</em> may be a single <a class="reference internal" href="#rootpy.plotting.hist.Hist" title="rootpy.plotting.hist.Hist"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.hist.Hist</span></tt></a> object or a
+<a class="reference internal" href="#rootpy.plotting.hist.HistStack" title="rootpy.plotting.hist.HistStack"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.hist.HistStack</span></tt></a>.  The <em>histtype</em> will be
+set automatically to &#8216;step&#8217; or &#8216;stepfilled&#8217; for each object based on its
+FillStyle.  All additional keyword arguments will be passed to
+<a class="reference external" href="http://matplotlib.sourceforge.net/api/pyplot_api.html#matplotlib.pyplot.hist" title="(in Matplotlib v1.1.1rc)"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.hist()</span></tt></a>.</p>
+<p>Keyword arguments:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><em>stacked</em>:</dt>
+<dd>If <em>True</em>, the hists will be stacked with the first hist on the bottom.
+If <em>False</em>, the hists will be overlaid with the first hist in the
+background.</dd>
+<dt><em>reverse</em>:</dt>
+<dd>If <em>True</em>, the stacking order will be reversed.</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.plotting.root2matplotlib.bar">
+<tt class="descclassname">rootpy.plotting.root2matplotlib.</tt><tt class="descname">bar</tt><big>(</big><em>hists</em>, <em>stacked=True</em>, <em>reverse=False</em>, <em>yerr=False</em>, <em>rwidth=0.8</em>, <em>axes=None</em>, <em>xpadding=0</em>, <em>ypadding=0.1</em>, <em>snap_zero=True</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/root2matplotlib.html#bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.root2matplotlib.bar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a matplotlib bar plot.</p>
+<p><em>hists</em> may be a single <a class="reference internal" href="#rootpy.plotting.hist.Hist" title="rootpy.plotting.hist.Hist"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.hist.Hist</span></tt></a>, a single
+<a class="reference internal" href="#rootpy.plotting.graph.Graph" title="rootpy.plotting.graph.Graph"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.graph.Graph</span></tt></a>, a list of either type, or a
+<a class="reference internal" href="#rootpy.plotting.hist.HistStack" title="rootpy.plotting.hist.HistStack"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.hist.HistStack</span></tt></a>.  All additional keyword
+arguments will be passed to <a class="reference external" href="http://matplotlib.sourceforge.net/api/pyplot_api.html#matplotlib.pyplot.bar" title="(in Matplotlib v1.1.1rc)"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.bar()</span></tt></a>.</p>
+<p>Keyword arguments:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><em>stacked</em>:</dt>
+<dd>If <em>True</em>, the hists will be stacked with the first hist on the bottom.
+If <em>False</em>, the hists will be overlaid with the first hist in the
+background.  If &#8216;cluster&#8217;, then the bars will be arranged side-by-side.</dd>
+<dt><em>reverse</em>:</dt>
+<dd>If <em>True</em>, the stacking order is reversed.</dd>
+<dt><em>yerr</em>:</dt>
+<dd>If <em>False</em>, no errors are displayed.  If <em>True</em>, an individual error will
+be displayed for each hist in the stack.  If &#8216;linear&#8217; or &#8216;quadratic&#8217;, a
+single error bar will be displayed with either the linear or quadratic
+sum of the individual errors.</dd>
+<dt><em>rwidth</em>:</dt>
+<dd>The relative width of the bars as a fraction of the bin width.</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.plotting.root2matplotlib.errorbar">
+<tt class="descclassname">rootpy.plotting.root2matplotlib.</tt><tt class="descname">errorbar</tt><big>(</big><em>hists</em>, <em>xerr=True</em>, <em>yerr=True</em>, <em>axes=None</em>, <em>xpadding=0</em>, <em>ypadding=0.1</em>, <em>snap_zero=True</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/root2matplotlib.html#errorbar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.root2matplotlib.errorbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a matplotlib errorbar plot.</p>
+<p><em>hists</em> may be a single <a class="reference internal" href="#rootpy.plotting.hist.Hist" title="rootpy.plotting.hist.Hist"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.hist.Hist</span></tt></a>, a single
+<a class="reference internal" href="#rootpy.plotting.graph.Graph" title="rootpy.plotting.graph.Graph"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.graph.Graph</span></tt></a>, a list of either type, or a
+<a class="reference internal" href="#rootpy.plotting.hist.HistStack" title="rootpy.plotting.hist.HistStack"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.hist.HistStack</span></tt></a>.  All additional keyword
+arguments will be passed to <a class="reference external" href="http://matplotlib.sourceforge.net/api/pyplot_api.html#matplotlib.pyplot.errorbar" title="(in Matplotlib v1.1.1rc)"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.errorbar()</span></tt></a>.</p>
+<p>Keyword arguments:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><em>xerr/yerr</em>:</dt>
+<dd>If <em>True</em>, display the x/y errors for each point.</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.plotting.shapes">
+<span id="shapes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">shapes</span></tt> Module<a class="headerlink" href="#module-rootpy.plotting.shapes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rootpy.plotting.shapes.Ellipse">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.shapes.</tt><tt class="descname">Ellipse</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/shapes.html#Ellipse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.shapes.Ellipse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rootpy.plotting.core.Plottable" title="rootpy.plotting.core.Plottable"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.core.Plottable</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TEllipse</span></tt></p>
+<dl class="method">
+<dt id="rootpy.plotting.shapes.Ellipse.draw">
+<tt class="descname">draw</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#rootpy.plotting.shapes.Ellipse.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.shapes.Ellipse.getFillColor">
+<tt class="descname">getFillColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.shapes.Ellipse.getFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.shapes.Ellipse.getFillStyle">
+<tt class="descname">getFillStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.shapes.Ellipse.getFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.shapes.Ellipse.getLineColor">
+<tt class="descname">getLineColor</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.shapes.Ellipse.getLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.shapes.Ellipse.getLineStyle">
+<tt class="descname">getLineStyle</tt><big>(</big><em>mode=None</em><big>)</big><a class="headerlink" href="#rootpy.plotting.shapes.Ellipse.getLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> may be &#8216;root&#8217;, &#8216;mpl&#8217;, or None to return the ROOT, matplotlib,
+or input value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.shapes.Ellipse.setFillColor">
+<tt class="descname">setFillColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.shapes.Ellipse.setFillColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.shapes.Ellipse.setFillStyle">
+<tt class="descname">setFillStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.shapes.Ellipse.setFillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any fill style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.FillStyle" title="rootpy.plotting.style.FillStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.FillStyle</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.shapes.Ellipse.setLineColor">
+<tt class="descname">setLineColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#rootpy.plotting.shapes.Ellipse.setLineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>color</em> may be any color understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>color</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.Color" title="rootpy.plotting.style.Color"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.Color</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.shapes.Ellipse.setLineStyle">
+<tt class="descname">setLineStyle</tt><big>(</big><em>style</em><big>)</big><a class="headerlink" href="#rootpy.plotting.shapes.Ellipse.setLineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>style</em> may be any line style understood by ROOT or matplotlib.</p>
+<p>For full documentation of accepted <em>style</em> arguments, see
+<a class="reference internal" href="#rootpy.plotting.style.LineStyle" title="rootpy.plotting.style.LineStyle"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style.LineStyle</span></tt></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.plotting.style">
+<span id="style-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">style</span></tt> Module<a class="headerlink" href="#module-rootpy.plotting.style" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rootpy.plotting.style.Color">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.style.</tt><tt class="descname">Color</tt><big>(</big><em>color</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/style.html#Color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.style.Color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style._StyleContainer</span></tt></p>
+<p>Container for grouping together ROOT and matplotlib colors.</p>
+<p>The <em>color</em> argument to the constructor can be a ROOT TColor or color index.
+If matplotlib is available, it can also accept an <em>RGB</em> or <em>RGBA</em> sequence,
+or a string in any of several forms:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>a letter from the set &#8216;rgbcmykw&#8217;</li>
+<li>a hex color string, like &#8216;#00FFFF&#8217;</li>
+<li>a standard name, like &#8216;aqua&#8217;</li>
+<li>a float, like &#8216;0.4&#8217;, indicating gray on a 0-1 scale</li>
+</ol>
+</div></blockquote>
+<p>if <em>color</em> is <em>RGBA</em>, the <em>A</em> will simply be discarded.</p>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color</span><span class="p">()</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+<span class="go">(1.0, 0.0, 0.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="p">(</span><span class="s">&#39;blue&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color</span><span class="p">(</span><span class="s">&#39;root&#39;</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+<span class="go">(0.0, 0.0, 1.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color</span> <span class="o">=</span> <span class="n">Color</span><span class="p">(</span><span class="s">&#39;0.25&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+<span class="go">(0.25, 0.25, 0.25)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color</span><span class="p">(</span><span class="s">&#39;root&#39;</span><span class="p">)</span>
+<span class="go">924</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.style.FillStyle">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.style.</tt><tt class="descname">FillStyle</tt><big>(</big><em>style</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/style.html#FillStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.style.FillStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style._StyleContainer</span></tt></p>
+<p>Container for grouping together ROOT and matplotlib fill styles.</p>
+<p>The <em>style</em> argument to the constructor may be a ROOT fill style,
+a matplotlib fill style, or one of the following descriptions:
+&#8216;solid&#8217;
+&#8216;hollow&#8217;</p>
+<p>For an input value of &#8216;solid&#8217;, the matplotlib hatch value will be set to None,
+which is the same value as for &#8216;hollow&#8217;.  The root2matplotlib functions will
+all check the ROOT value to see whether to make the fill solid or hollow.</p>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">style</span> <span class="o">=</span> <span class="n">FillStyle</span><span class="p">(</span><span class="s">&#39;hollow&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">style</span><span class="p">(</span><span class="s">&#39;root&#39;</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">style</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+<span class="go">None</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.style.LineStyle">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.style.</tt><tt class="descname">LineStyle</tt><big>(</big><em>style</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/style.html#LineStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.style.LineStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style._StyleContainer</span></tt></p>
+<p>Container for grouping together ROOT and matplotlib line styles.</p>
+<p>The <em>style</em> argument to the constructor may be a ROOT line style,
+a matplotlib line style, or one of the following descriptions:
+&#8216;longdashdot&#8217;
+&#8216;dashdot&#8217;
+&#8216;dotted&#8217;
+&#8216;longdashdotdotdot&#8217;
+&#8216;solid&#8217;
+&#8216;dashed&#8217;
+&#8216;longdash&#8217;
+&#8216;verylongdashdot&#8217;
+&#8216;verylongdash&#8217;
+&#8216;longdashdotdot&#8217;</p>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">style</span> <span class="o">=</span> <span class="n">LineStyle</span><span class="p">(</span><span class="s">&#39;verylongdashdot&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">style</span><span class="p">(</span><span class="s">&#39;root&#39;</span><span class="p">)</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">style</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+<span class="go">&#39;dashdot&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.style.MarkerStyle">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.style.</tt><tt class="descname">MarkerStyle</tt><big>(</big><em>style</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/style.html#MarkerStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.style.MarkerStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.style._StyleContainer</span></tt></p>
+<p>Container for grouping together ROOT and matplotlib marker styles.</p>
+<p>The <em>style</em> argument to the constructor may be a ROOT marker style,
+a matplotlib marker style, or one of the following descriptions:
+&#8216;square&#8217;
+&#8216;triangle&#8217;
+&#8216;largedot&#8217;
+&#8216;opencircle&#8217;
+&#8216;triangleup&#8217;
+&#8216;opencross&#8217;
+&#8216;opensquare&#8217;
+&#8216;triangledown&#8217;
+&#8216;cross&#8217;
+&#8216;openstar&#8217;
+&#8216;diamond&#8217;
+&#8216;opendiamond&#8217;
+&#8216;dot&#8217;
+&#8216;mediumdot&#8217;
+&#8216;opentriangle&#8217;
+&#8216;fullstar&#8217;
+&#8216;circle&#8217;
+&#8216;star&#8217;
+&#8216;smalldot&#8217;</p>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">style</span> <span class="o">=</span> <span class="n">MarkerStyle</span><span class="p">(</span><span class="s">&#39;opentriangle&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">style</span><span class="p">(</span><span class="s">&#39;root&#39;</span><span class="p">)</span>
+<span class="go">26</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">style</span><span class="p">(</span><span class="s">&#39;mpl&#39;</span><span class="p">)</span>
+<span class="go">&#39;^&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.plotting.style.convert_color">
+<tt class="descclassname">rootpy.plotting.style.</tt><tt class="descname">convert_color</tt><big>(</big><em>color</em>, <em>mode</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/style.html#convert_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.style.convert_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert <em>color</em> to a TColor if <em>mode=&#8217;root&#8217;</em> or to (r,g,b) if &#8216;mpl&#8217;.</p>
+<p>The <em>color</em> argument can be a ROOT TColor or color index, an <em>RGB</em>
+or <em>RGBA</em> sequence or a string in any of several forms:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>a letter from the set &#8216;rgbcmykw&#8217;</li>
+<li>a hex color string, like &#8216;#00FFFF&#8217;</li>
+<li>a standard name, like &#8216;aqua&#8217;</li>
+<li>a float, like &#8216;0.4&#8217;, indicating gray on a 0-1 scale</li>
+</ol>
+</div></blockquote>
+<p>if <em>arg</em> is <em>RGBA</em>, the transparency value will be ignored.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.plotting.style.convert_fillstyle">
+<tt class="descclassname">rootpy.plotting.style.</tt><tt class="descname">convert_fillstyle</tt><big>(</big><em>inputstyle</em>, <em>mode</em>, <em>inputmode=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/style.html#convert_fillstyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.style.convert_fillstyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert <em>inputstyle</em> to ROOT or matplotlib format.</p>
+<p>Output format is determined by <em>mode</em> (&#8216;root&#8217; or &#8216;mpl&#8217;).  The <em>inputstyle</em>
+may be a ROOT fill style, a matplotlib hatch style, &#8216;hollow&#8217;, or &#8216;solid&#8217;.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.plotting.style.convert_linestyle">
+<tt class="descclassname">rootpy.plotting.style.</tt><tt class="descname">convert_linestyle</tt><big>(</big><em>inputstyle</em>, <em>mode</em>, <em>inputmode=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/style.html#convert_linestyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.style.convert_linestyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert <em>inputstyle</em> to ROOT or matplotlib format.</p>
+<p>Output format is determined by <em>mode</em> (&#8216;root&#8217; or &#8216;mpl&#8217;).  The <em>inputstyle</em>
+may be a ROOT line style, a matplotlib line style, or a description
+such as &#8216;solid&#8217; or &#8216;dotted&#8217;.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.plotting.style.convert_markerstyle">
+<tt class="descclassname">rootpy.plotting.style.</tt><tt class="descname">convert_markerstyle</tt><big>(</big><em>inputstyle</em>, <em>mode</em>, <em>inputmode=None</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/style.html#convert_markerstyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.style.convert_markerstyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert <em>inputstyle</em> to ROOT or matplotlib format.</p>
+<p>Output format is determined by <em>mode</em> (&#8216;root&#8217; or &#8216;mpl&#8217;).  The <em>inputstyle</em>
+may be a ROOT marker style, a matplotlib marker style, or a description
+such as &#8216;star&#8217; or &#8216;square&#8217;.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.plotting.views">
+<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-rootpy.plotting.views" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="folder-view-classes">
+<h3>Folder &#8220;View&#8221; Classes<a class="headerlink" href="#folder-view-classes" title="Permalink to this headline">¶</a></h3>
+<p>These classes wrap Directories and perform automatic actions
+to Histograms retrieved from them.  The different views can be composited and
+layered.</p>
+<p>Summary of views:</p>
+<ul class="simple">
+<li>ScaleView: scale histogram normalization</li>
+<li>NormalizeView: normalize histograms</li>
+<li>SumView: sum histograms from different folders together</li>
+<li>StyleError: apply a style to histograms</li>
+<li>StackView: build THStacks using histograms from different folders</li>
+<li>TitleView: change the title of histograms</li>
+<li>FunctorView: apply a arbitrary transformation function to the histograms</li>
+<li>MultiFunctorView: apply a arbitrary transformation function to a collection of histograms</li>
+<li>SubdirectoryView: A view of a subdirectory, which maintains the same view as the base.</li>
+</ul>
+<div class="section" id="example-use-case">
+<h4>Example use case<a class="headerlink" href="#example-use-case" title="Permalink to this headline">¶</a></h4>
+<p>One has a ROOT file with the following content:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">zjets</span><span class="o">/</span><span class="n">mutau_mass</span>
+<span class="n">zz</span><span class="o">/</span><span class="n">mutau_mass</span>
+<span class="n">wz</span><span class="o">/</span><span class="n">mutau_mass</span>
+<span class="n">data_2010</span><span class="o">/</span><span class="n">mutau_mass</span>
+<span class="n">data_2011</span><span class="o">/</span><span class="n">mutau_mass</span>
+</pre></div>
+</div>
+<p>and wants to do the following:</p>
+<ol class="arabic simple">
+<li>Merge the two data taking periods together</li>
+<li>Scale the Z, WZ, and ZZ simulated results to the appropriate int. lumi.</li>
+<li>Combine WZ and ZZ into a single diboson sample</li>
+<li>Apply different colors to the MC samples</li>
+<li>Make a Stack of the expected yields from different simulated processes</li>
+</ol>
+<p>This example can be tested by running:</p>
+<div class="highlight-python"><pre>python -m rootpy.plotting.views</pre>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># Mock up the example test case</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">rootpy.io</span> <span class="kn">as</span> <span class="nn">io</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># We have to keep these, to make sure PyROOT doesn&#39;t garbage collect them</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keep</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets_dir</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Directory</span><span class="p">(</span><span class="s">&#39;zjets&#39;</span><span class="p">,</span> <span class="s">&#39;Zjets directory&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zz_dir</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Directory</span><span class="p">(</span><span class="s">&#39;zz&#39;</span><span class="p">,</span> <span class="s">&#39;ZZ directory&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wz_dir</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Directory</span><span class="p">(</span><span class="s">&#39;wz&#39;</span><span class="p">,</span> <span class="s">&#39;WZ directory&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2010_dir</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Directory</span><span class="p">(</span><span class="s">&#39;data2010&#39;</span><span class="p">,</span> <span class="s">&#39;data2010 directory&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2011_dir</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Directory</span><span class="p">(</span><span class="s">&#39;data2011&#39;</span><span class="p">,</span> <span class="s">&#39;data2011 directory&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Make the Zjets case</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">zjets_dir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets_hist</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TH1F</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">,</span> <span class="s">&quot;Mu-Tau mass&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets_hist</span><span class="o">.</span><span class="n">FillRandom</span><span class="p">(</span><span class="s">&#39;gaus&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zjets_hist</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Make the ZZ case</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">zz_dir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zz_hist</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TH1F</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">,</span> <span class="s">&quot;Mu-Tau mass&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zz_hist</span><span class="o">.</span><span class="n">FillRandom</span><span class="p">(</span><span class="s">&#39;gaus&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zz_hist</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Make the WZ case</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">wz_dir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wz_hist</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TH1F</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">,</span> <span class="s">&quot;Mu-Tau mass&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wz_hist</span><span class="o">.</span><span class="n">FillRandom</span><span class="p">(</span><span class="s">&#39;gaus&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wz_hist</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Make the 2010 data case</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">data2010_dir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2010_hist</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TH1F</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">,</span> <span class="s">&quot;Mu-Tau mass&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2010_hist</span><span class="o">.</span><span class="n">FillRandom</span><span class="p">(</span><span class="s">&#39;gaus&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data2010_hist</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Make the 2011 data case</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">data2011_dir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2011_hist</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TH1F</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">,</span> <span class="s">&quot;Mu-Tau mass&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2011_hist</span><span class="o">.</span><span class="n">FillRandom</span><span class="p">(</span><span class="s">&#39;gaus&#39;</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data2011_hist</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="sumview">
+<h5>SumView<a class="headerlink" href="#sumview" title="Permalink to this headline">¶</a></h5>
+<p>We can merge the two data periods into a single case using a SumView.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">SumView</span><span class="p">(</span><span class="n">data2010_dir</span><span class="p">,</span> <span class="n">data2011_dir</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_hist</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_hist</span><span class="o">.</span><span class="n">Integral</span><span class="p">()</span>
+<span class="go">81.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_hist</span><span class="o">.</span><span class="n">Integral</span><span class="p">()</span> <span class="o">==</span> <span class="n">data2010_hist</span><span class="o">.</span><span class="n">Integral</span><span class="p">()</span> <span class="o">+</span> <span class="n">data2011_hist</span><span class="o">.</span><span class="n">Integral</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="scaleview">
+<h5>ScaleView<a class="headerlink" href="#scaleview" title="Permalink to this headline">¶</a></h5>
+<p>The simulated results (Z &amp; diboson) can be scaled to the expected integrated
+luminosity using ScaleViews.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">zjets</span> <span class="o">=</span> <span class="n">ScaleView</span><span class="p">(</span><span class="n">zjets_dir</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets_hist</span> <span class="o">=</span> <span class="n">zjets</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="n">zjets_hist</span><span class="o">.</span><span class="n">Integral</span><span class="p">()</span> <span class="o">-</span> <span class="mf">50.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Scale the diboson contribution</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zz</span> <span class="o">=</span> <span class="n">ScaleView</span><span class="p">(</span><span class="n">zz_dir</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wz</span> <span class="o">=</span> <span class="n">ScaleView</span><span class="p">(</span><span class="n">wz_dir</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="combining-views">
+<h5>Combining views<a class="headerlink" href="#combining-views" title="Permalink to this headline">¶</a></h5>
+<p>The dibosons individually are tiny, let&#8217;s put them together using a SumView.
+Note that this operation nests two ScaleViews into a SumView.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dibosons</span> <span class="o">=</span> <span class="n">SumView</span><span class="p">(</span><span class="n">zz</span><span class="p">,</span> <span class="n">wz</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># We expect 5000*0.001 + 5000*0.003 = 20 events</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dibosons_hist</span> <span class="o">=</span> <span class="n">dibosons</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="n">dibosons_hist</span><span class="o">.</span><span class="n">Integral</span><span class="p">()</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="styleview">
+<h5>StyleView<a class="headerlink" href="#styleview" title="Permalink to this headline">¶</a></h5>
+<p>A style view automatically applies a style to retrieved Plottable objects.
+The style is specified using the same arguments as the Plottable.decorate.
+Let&#8217;s make the Z background red and the diboson background blue.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">zjets</span> <span class="o">=</span> <span class="n">StyleView</span><span class="p">(</span><span class="n">zjets</span><span class="p">,</span> <span class="n">fillcolor</span><span class="o">=</span><span class="n">ROOT</span><span class="o">.</span><span class="n">EColor</span><span class="o">.</span><span class="n">kRed</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dibosons</span> <span class="o">=</span> <span class="n">StyleView</span><span class="p">(</span><span class="n">dibosons</span><span class="p">,</span> <span class="n">fillcolor</span><span class="o">=</span><span class="n">ROOT</span><span class="o">.</span><span class="n">EColor</span><span class="o">.</span><span class="n">kBlue</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets_hist</span> <span class="o">=</span> <span class="n">zjets</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets_hist</span><span class="o">.</span><span class="n">GetFillColor</span><span class="p">()</span> <span class="o">==</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">EColor</span><span class="o">.</span><span class="n">kRed</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dibosons_hist</span> <span class="o">=</span> <span class="n">dibosons</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dibosons_hist</span><span class="o">.</span><span class="n">GetFillColor</span><span class="p">()</span> <span class="o">==</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">EColor</span><span class="o">.</span><span class="n">kBlue</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stackview">
+<h5>StackView<a class="headerlink" href="#stackview" title="Permalink to this headline">¶</a></h5>
+<p>The StackView combines multiple items into a HistStack.  In our example
+we stack the SM backgrounds to compare to the data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sm_bkg</span> <span class="o">=</span> <span class="n">StackView</span><span class="p">(</span><span class="n">zjets</span><span class="p">,</span> <span class="n">dibosons</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sm_bkg_stack</span> <span class="o">=</span> <span class="n">sm_bkg</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;</span><span class="si">%0.0f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">sm_bkg_stack</span><span class="o">.</span><span class="n">Integral</span><span class="p">()</span>
+<span class="go">&#39;70&#39;</span>
+</pre></div>
+</div>
+<p>Looks like we have an excess of 11 events - must be the Higgs.</p>
+</div>
+</div>
+<div class="section" id="other-examples">
+<h4>Other Examples<a class="headerlink" href="#other-examples" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="normalizeview">
+<h5>NormalizeView<a class="headerlink" href="#normalizeview" title="Permalink to this headline">¶</a></h5>
+<p>The normalization view renormalizes histograms to a given value (default 1.0).
+Here is an example of using the NormalizeView to compare the Z and diboson
+shapes.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">z_shape</span> <span class="o">=</span> <span class="n">NormalizeView</span><span class="p">(</span><span class="n">zjets</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z_shape_hist</span> <span class="o">=</span> <span class="n">z_shape</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">z_shape_hist</span><span class="o">.</span><span class="n">Integral</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Let&#39;s compare the shapes using a HistStack, using the &quot;nostack&quot; option.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">diboson_shape</span> <span class="o">=</span> <span class="n">NormalizeView</span><span class="p">(</span><span class="n">dibosons</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape_comparison</span> <span class="o">=</span> <span class="n">StackView</span><span class="p">(</span><span class="n">z_shape</span><span class="p">,</span> <span class="n">diboson_shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># To draw the comparison:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># shape_comparison.Get(&quot;mutau_mass&quot;).Draw(&#39;nostack&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="functorview">
+<h5>FunctorView<a class="headerlink" href="#functorview" title="Permalink to this headline">¶</a></h5>
+<p>FunctorView allows you to apply an arbitrary transformation to the object.  Here
+we show how you can change the axis range for all histograms in a directory.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">rebin</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">Rebin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets_rebinned</span> <span class="o">=</span> <span class="n">FunctorView</span><span class="p">(</span><span class="n">zjets</span><span class="p">,</span> <span class="n">rebin</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">GetNbinsX</span><span class="p">()</span>
+<span class="go">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets_rebinned</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">GetNbinsX</span><span class="p">()</span>
+<span class="go">50</span>
+</pre></div>
+</div>
+<p>The functor doesn&#8217;t have to return a histogram.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mean_getter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">GetMean</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span> <span class="o">=</span> <span class="n">zjets</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">GetMean</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets_mean</span> <span class="o">=</span> <span class="n">FunctorView</span><span class="p">(</span><span class="n">zjets</span><span class="p">,</span> <span class="n">mean_getter</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zjets_mean</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">mean</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multifunctorview">
+<h5>MultiFunctorView<a class="headerlink" href="#multifunctorview" title="Permalink to this headline">¶</a></h5>
+<p>MultiFunctorView is similar except that it operates on a group of histograms.
+The functor should take one argument, a <em>generator</em> of the sub-objects.</p>
+<p>Here&#8217;s an example to get the integral of the biggest histogram in a set:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">biggest_histo</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">objects</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">Integral</span><span class="p">()</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">biggest</span> <span class="o">=</span> <span class="n">MultiFunctorView</span><span class="p">(</span><span class="n">biggest_histo</span><span class="p">,</span> <span class="n">zjets</span><span class="p">,</span> <span class="n">dibosons</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">biggest</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">zjets</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">Integral</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="subdirectoryview">
+<h5>SubdirectoryView<a class="headerlink" href="#subdirectoryview" title="Permalink to this headline">¶</a></h5>
+<p>If you&#8217;d like to &#8220;cd&#8221; into a lower subdirectory, while still maintaining
+the same view, use a SubdirectoryView.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">basedir</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Directory</span><span class="p">(</span><span class="s">&#39;base&#39;</span><span class="p">,</span> <span class="s">&#39;base directory&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">basedir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">subdir1</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Directory</span><span class="p">(</span><span class="s">&#39;subdir1&#39;</span><span class="p">,</span> <span class="s">&#39;subdir directory in 1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">subdir1</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TH1F</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">,</span> <span class="s">&quot;Mu-Tau mass&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span><span class="o">.</span><span class="n">FillRandom</span><span class="p">(</span><span class="s">&#39;gaus&#39;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">basedir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">subdir2</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">Directory</span><span class="p">(</span><span class="s">&#39;subdir2&#39;</span><span class="p">,</span> <span class="s">&#39;subdir directory 2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">subdir2</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TH1F</span><span class="p">(</span><span class="s">&quot;mutau_mass&quot;</span><span class="p">,</span> <span class="s">&quot;Mu-Tau mass&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span><span class="o">.</span><span class="n">FillRandom</span><span class="p">(</span><span class="s">&#39;gaus&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>The directory structure is now::</dt>
+<dd>base/subdir1/hist
+base/subdir2/hist</dd>
+</dl>
+<p>Subdirectory views work on top of other views.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">baseview</span> <span class="o">=</span> <span class="n">ScaleView</span><span class="p">(</span><span class="n">basedir</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">subdir1view</span> <span class="o">=</span> <span class="n">SubdirectoryView</span><span class="p">(</span><span class="n">baseview</span><span class="p">,</span> <span class="s">&#39;subdir1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">subdir2view</span> <span class="o">=</span> <span class="n">SubdirectoryView</span><span class="p">(</span><span class="n">baseview</span><span class="p">,</span> <span class="s">&#39;subdir2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">histo1</span> <span class="o">=</span> <span class="n">subdir1view</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&#39;mutau_mass&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">histo2</span> <span class="o">=</span> <span class="n">subdir2view</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&#39;mutau_mass&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exp_histo1</span> <span class="o">=</span> <span class="n">baseview</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;subdir1/mutau_mass&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exp_histo2</span> <span class="o">=</span> <span class="n">baseview</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;subdir2/mutau_mass&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">equivalent</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">h1</span><span class="o">.</span><span class="n">GetMean</span><span class="p">()</span> <span class="o">-</span> <span class="n">h2</span><span class="o">.</span><span class="n">GetMean</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-4</span> <span class="ow">and</span>
+<span class="gp">... </span>            <span class="nb">abs</span><span class="p">(</span><span class="n">h1</span><span class="o">.</span><span class="n">GetRMS</span><span class="p">()</span> <span class="o">-</span> <span class="n">h2</span><span class="o">.</span><span class="n">GetRMS</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-4</span> <span class="ow">and</span>
+<span class="gp">... </span>            <span class="nb">abs</span><span class="p">(</span><span class="n">h1</span><span class="o">.</span><span class="n">Integral</span><span class="p">()</span> <span class="o">-</span> <span class="n">h2</span><span class="o">.</span><span class="n">Integral</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">equivalent</span><span class="p">(</span><span class="n">exp_histo1</span><span class="p">,</span> <span class="n">histo1</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">equivalent</span><span class="p">(</span><span class="n">exp_histo2</span><span class="p">,</span> <span class="n">histo2</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">equivalent</span><span class="p">(</span><span class="n">histo1</span><span class="p">,</span> <span class="n">histo2</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="rootpy.plotting.views.FunctorView">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.views.</tt><tt class="descname">FunctorView</tt><big>(</big><em>directory</em>, <em>function</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#FunctorView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.FunctorView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.views._FolderView</span></tt></p>
+<p>Apply an arbitrary function to the output histogram.</p>
+<p>The histogram is always cloned before it is passed to the function.</p>
+<dl class="method">
+<dt id="rootpy.plotting.views.FunctorView.apply_view">
+<tt class="descname">apply_view</tt><big>(</big><em>object</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#FunctorView.apply_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.FunctorView.apply_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.views.MultiFunctorView">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.views.</tt><tt class="descname">MultiFunctorView</tt><big>(</big><em>f</em>, <em>*directories</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#MultiFunctorView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.MultiFunctorView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.views._MultiFolderView</span></tt></p>
+<p>Apply an arbitrary function to the output histograms.</p>
+<p>The function must take one argument, a generator of objects.</p>
+<dl class="method">
+<dt id="rootpy.plotting.views.MultiFunctorView.merge_views">
+<tt class="descname">merge_views</tt><big>(</big><em>objects</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#MultiFunctorView.merge_views"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.MultiFunctorView.merge_views" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.views.NormalizeView">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.views.</tt><tt class="descname">NormalizeView</tt><big>(</big><em>directory</em>, <em>normalization=1.0</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#NormalizeView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.NormalizeView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rootpy.plotting.views.ScaleView" title="rootpy.plotting.views.ScaleView"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.views.ScaleView</span></tt></a></p>
+<p>Normalize histograms to a constant value</p>
+<dl class="method">
+<dt id="rootpy.plotting.views.NormalizeView.apply_view">
+<tt class="descname">apply_view</tt><big>(</big><em>object</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#NormalizeView.apply_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.NormalizeView.apply_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.views.PathModifierView">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.views.</tt><tt class="descname">PathModifierView</tt><big>(</big><em>dir</em>, <em>path_modifier</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#PathModifierView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.PathModifierView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.views._FolderView</span></tt></p>
+<p>Does some magic to the path</p>
+<p>User should supply a functor which transforms the path argument
+passed to Get(...)</p>
+<dl class="method">
+<dt id="rootpy.plotting.views.PathModifierView.Get">
+<tt class="descname">Get</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#PathModifierView.Get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.PathModifierView.Get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.plotting.views.PathModifierView.apply_view">
+<tt class="descname">apply_view</tt><big>(</big><em>object</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#PathModifierView.apply_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.PathModifierView.apply_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do nothing</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.views.ScaleView">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.views.</tt><tt class="descname">ScaleView</tt><big>(</big><em>directory</em>, <em>scale_factor</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#ScaleView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.ScaleView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.views._FolderView</span></tt></p>
+<p>View of a folder which applies a scaling factor to histograms.</p>
+<dl class="method">
+<dt id="rootpy.plotting.views.ScaleView.apply_view">
+<tt class="descname">apply_view</tt><big>(</big><em>object</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#ScaleView.apply_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.ScaleView.apply_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.views.StackView">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.views.</tt><tt class="descname">StackView</tt><big>(</big><em>*directories</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#StackView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.StackView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.views._MultiFolderView</span></tt></p>
+<p>Build a HistStack from the input histograms</p>
+<p>The default draw option that histograms will use is &#8220;hist&#8221;.</p>
+<p>One can override this for all histograms by passing a string.
+Individual behavior can be controlled by passing a list of draw options,
+corresponding to the input directories. In this case the option for
+all histograms must be specified.</p>
+<p>The name and title of the HistStack is taken from the first histogram in the
+list.</p>
+<p>Normally the histograms will be added to the stack in the order
+of the constructor.  Optionally, one can add them in order of ascending
+integral by passing the kwarg sorted=True.</p>
+<dl class="method">
+<dt id="rootpy.plotting.views.StackView.merge_views">
+<tt class="descname">merge_views</tt><big>(</big><em>objects</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#StackView.merge_views"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.StackView.merge_views" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.views.StyleView">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.views.</tt><tt class="descname">StyleView</tt><big>(</big><em>directory</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#StyleView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.StyleView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.views._FolderView</span></tt></p>
+<p>View of a folder which applies a style to Plottable objects.</p>
+<p>The kwargs are passed to Plottable.decorate</p>
+<dl class="method">
+<dt id="rootpy.plotting.views.StyleView.apply_view">
+<tt class="descname">apply_view</tt><big>(</big><em>object</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#StyleView.apply_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.StyleView.apply_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.views.SubdirectoryView">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.views.</tt><tt class="descname">SubdirectoryView</tt><big>(</big><em>dir</em>, <em>subdirpath</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#SubdirectoryView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.SubdirectoryView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rootpy.plotting.views.PathModifierView" title="rootpy.plotting.views.PathModifierView"><tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.views.PathModifierView</span></tt></a></p>
+<p>Add some base directories to the path of Get()</p>
+<p>&lt;subdir&gt; is the directory you want to &#8216;cd&#8217; too.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.views.SumView">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.views.</tt><tt class="descname">SumView</tt><big>(</big><em>*directories</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#SumView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.SumView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.views._MultiFolderView</span></tt></p>
+<p>Add a collection of histograms together</p>
+<dl class="method">
+<dt id="rootpy.plotting.views.SumView.merge_views">
+<tt class="descname">merge_views</tt><big>(</big><em>objects</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#SumView.merge_views"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.SumView.merge_views" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.plotting.views.TitleView">
+<em class="property">class </em><tt class="descclassname">rootpy.plotting.views.</tt><tt class="descname">TitleView</tt><big>(</big><em>directory</em>, <em>title</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#TitleView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.TitleView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.plotting.views._FolderView</span></tt></p>
+<p>Override the title of gotten histograms</p>
+<dl class="method">
+<dt id="rootpy.plotting.views.TitleView.apply_view">
+<tt class="descname">apply_view</tt><big>(</big><em>object</em><big>)</big><a class="reference internal" href="../_modules/rootpy/plotting/views.html#TitleView.apply_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.plotting.views.TitleView.apply_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">plotting Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">plotting</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-rootpy.plotting.canvas"><tt class="docutils literal"><span class="pre">canvas</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.plotting.core"><tt class="docutils literal"><span class="pre">core</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.plotting.graph"><tt class="docutils literal"><span class="pre">graph</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.plotting.hist"><tt class="docutils literal"><span class="pre">hist</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.plotting.legend"><tt class="docutils literal"><span class="pre">legend</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.plotting.pyplot"><tt class="docutils literal"><span class="pre">pyplot</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.plotting.root2matplotlib"><tt class="docutils literal"><span class="pre">root2matplotlib</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.plotting.shapes"><tt class="docutils literal"><span class="pre">shapes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.plotting.style"><tt class="docutils literal"><span class="pre">style</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.plotting.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#folder-view-classes">Folder &#8220;View&#8221; Classes</a><ul>
+<li><a class="reference internal" href="#example-use-case">Example use case</a><ul>
+<li><a class="reference internal" href="#sumview">SumView</a></li>
+<li><a class="reference internal" href="#scaleview">ScaleView</a></li>
+<li><a class="reference internal" href="#combining-views">Combining views</a></li>
+<li><a class="reference internal" href="#styleview">StyleView</a></li>
+<li><a class="reference internal" href="#stackview">StackView</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#other-examples">Other Examples</a><ul>
+<li><a class="reference internal" href="#normalizeview">NormalizeView</a></li>
+<li><a class="reference internal" href="#functorview">FunctorView</a></li>
+<li><a class="reference internal" href="#multifunctorview">MultiFunctorView</a></li>
+<li><a class="reference internal" href="#subdirectoryview">SubdirectoryView</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">rootpy</a><ul>
+  <li><a href="rootpy.html">rootpy Package</a><ul>
+      <li>Previous: <a href="rootpy.networking.html" title="previous chapter">networking Package</a></li>
+      <li>Next: <a href="rootpy.root2array.html" title="next chapter">root2array Package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/rootpy.plotting.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2011, Noel Dawe, Jeff Klukas.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>

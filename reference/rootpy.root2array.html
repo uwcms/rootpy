@@ -1,0 +1,164 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>root2array Package &mdash; rootpy 0.7.0-a0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.7.0-a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="rootpy 0.7.0-a0 documentation" href="../index.html" />
+    <link rel="up" title="rootpy Package" href="rootpy.html" />
+    <link rel="next" title="tree Package" href="rootpy.tree.html" />
+    <link rel="prev" title="plotting Package" href="rootpy.plotting.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/clean_small.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+  
+    <a href="http://github.com/rootpy/rootpy"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rootpy.tree.html" title="tree Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rootpy.plotting.html" title="plotting Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">rootpy 0.7.0-a0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >rootpy</a> &raquo;</li>
+          <li><a href="rootpy.html" accesskey="U">rootpy Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="root2array-package">
+<h1>root2array Package<a class="headerlink" href="#root2array-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">root2array</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-rootpy.root2array"></span></div>
+<div class="section" id="module-rootpy.root2array.root2array">
+<span id="root2array-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">root2array</span></tt> Module<a class="headerlink" href="#module-rootpy.root2array.root2array" title="Permalink to this headline">¶</a></h2>
+<p>This module includes:
+* conversion of TTrees into NumPy ndarrays and recarrays.
+* utility functions for working with ndarrays and recarrays.
+* TODO: conversion of TTrees into carrays (<a class="reference external" href="http://pypi.python.org/pypi/carray">http://pypi.python.org/pypi/carray</a>).</p>
+<dl class="function">
+<dt id="rootpy.root2array.root2array.recarray_to_ndarray">
+<tt class="descclassname">rootpy.root2array.root2array.</tt><tt class="descname">recarray_to_ndarray</tt><big>(</big><em>rec</em>, <em>fields=None</em>, <em>dtype=&lt;type 'numpy.float32'&gt;</em><big>)</big><a class="reference internal" href="../_modules/rootpy/root2array/root2array.html#recarray_to_ndarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.root2array.root2array.recarray_to_ndarray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a numpy.recarray into a numpy.ndarray</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.root2array.root2array.tree_to_ndarray">
+<tt class="descclassname">rootpy.root2array.root2array.</tt><tt class="descname">tree_to_ndarray</tt><big>(</big><em>trees</em>, <em>branches=None</em>, <em>dtype=&lt;type 'numpy.float32'&gt;</em>, <em>include_weight=False</em>, <em>weight_dtype='f4'</em><big>)</big><a class="reference internal" href="../_modules/rootpy/root2array/root2array.html#tree_to_ndarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.root2array.root2array.tree_to_ndarray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a tree or a list of trees into a numpy.ndarray</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.root2array.root2array.tree_to_recarray">
+<tt class="descclassname">rootpy.root2array.root2array.</tt><tt class="descname">tree_to_recarray</tt><big>(</big><em>trees</em>, <em>branches=None</em>, <em>include_weight=False</em>, <em>weight_name='weight'</em>, <em>weight_dtype='f4'</em><big>)</big><a class="reference internal" href="../_modules/rootpy/root2array/root2array.html#tree_to_recarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.root2array.root2array.tree_to_recarray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a tree or a list of trees into a numpy.recarray
+with fields corresponding to the tree branches</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rootpy.root2array.root2array.tree_to_recarray_py">
+<tt class="descclassname">rootpy.root2array.root2array.</tt><tt class="descname">tree_to_recarray_py</tt><big>(</big><em>trees</em>, <em>branches=None</em>, <em>use_cache=False</em>, <em>cache_size=1000000</em>, <em>include_weight=False</em>, <em>weight_name='weight'</em>, <em>weight_dtype='f4'</em><big>)</big><a class="reference internal" href="../_modules/rootpy/root2array/root2array.html#tree_to_recarray_py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.root2array.root2array.tree_to_recarray_py" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a tree or a list of trees into a numpy.recarray
+with fields corresponding to the tree branches</p>
+<p>(the slow pure-Python way...)</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">root2array Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">root2array</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-rootpy.root2array.root2array"><tt class="docutils literal"><span class="pre">root2array</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">rootpy</a><ul>
+  <li><a href="rootpy.html">rootpy Package</a><ul>
+      <li>Previous: <a href="rootpy.plotting.html" title="previous chapter">plotting Package</a></li>
+      <li>Next: <a href="rootpy.tree.html" title="next chapter">tree Package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/rootpy.root2array.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2011, Noel Dawe, Jeff Klukas.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>

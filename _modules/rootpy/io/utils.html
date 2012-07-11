@@ -1,0 +1,228 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>rootpy.io.utils &mdash; rootpy 0.7.0-a0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.7.0-a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="rootpy 0.7.0-a0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../../../_static/clean_small.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+  
+    <a href="http://github.com/rootpy/rootpy"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">rootpy 0.7.0-a0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for rootpy.io.utils</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains os.path/walk-like</span>
+<span class="sd">utilities for the ROOT TFile &#39;filesystem&#39;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">ROOT</span>
+<span class="kn">from</span> <span class="nn">fnmatch</span> <span class="kn">import</span> <span class="n">fnmatch</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">asrootpy</span>
+
+
+<div class="viewcode-block" id="walk"><a class="viewcode-back" href="../../../reference/rootpy.io.html#rootpy.io.utils.walk">[docs]</a><span class="k">def</span> <span class="nf">walk</span><span class="p">(</span><span class="n">tdirectory</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxdepth</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">class_pattern</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For each directory in the directory tree rooted at top (including top</span>
+<span class="sd">    itself, but excluding &#39;.&#39; and &#39;..&#39;), yields a 3-tuple</span>
+
+<span class="sd">    dirpath, dirnames, filenames</span>
+
+<span class="sd">    dirpath is a string, the path to the directory.  dirnames is a list of the</span>
+<span class="sd">    names of the subdirectories in dirpath (excluding &#39;.&#39; and &#39;..&#39;).  filenames</span>
+<span class="sd">    is a list of the names of the non-directory files/objects in dirpath.  Note</span>
+<span class="sd">    that the names in the lists are just names, with no path components.  To get</span>
+<span class="sd">    a full path (which begins with top) to a file or directory in dirpath, do</span>
+<span class="sd">    os.path.join(dirpath, name).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dirnames</span><span class="p">,</span> <span class="n">objectnames</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">top</span><span class="p">:</span>
+        <span class="n">tdirectory</span> <span class="o">=</span> <span class="n">tdirectory</span><span class="o">.</span><span class="n">GetDirectory</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">tdirectory</span><span class="o">.</span><span class="n">unique_keys</span><span class="p">():</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+        <span class="n">classname</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">GetClassName</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">classname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;TDirectory&#39;</span><span class="p">):</span>
+            <span class="n">dirnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">class_pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">classname</span><span class="p">,</span> <span class="n">class_pattern</span><span class="p">):</span>
+                    <span class="k">continue</span>
+            <span class="n">objectnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
+        <span class="n">dirpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">tdirectory</span><span class="o">.</span><span class="n">GetName</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tdirectory</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TFile</span><span class="p">):</span>
+        <span class="n">dirpath</span> <span class="o">=</span> <span class="n">tdirectory</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dirpath</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="k">yield</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">objectnames</span>
+    <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="n">maxdepth</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">dirname</span> <span class="ow">in</span> <span class="n">dirnames</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">walk</span><span class="p">(</span><span class="n">tdirectory</span><span class="o">.</span><span class="n">GetDirectory</span><span class="p">(</span><span class="n">dirname</span><span class="p">),</span>
+                      <span class="n">class_pattern</span><span class="o">=</span><span class="n">class_pattern</span><span class="p">,</span>
+                      <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+                      <span class="n">maxdepth</span><span class="o">=</span><span class="n">maxdepth</span><span class="p">,</span>
+                      <span class="n">path</span><span class="o">=</span><span class="n">dirpath</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">x</span>
+
+</div>
+<div class="viewcode-block" id="splitfile"><a class="viewcode-back" href="../../../reference/rootpy.io.html#rootpy.io.utils.splitfile">[docs]</a><span class="k">def</span> <span class="nf">splitfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+
+    <span class="n">filename</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s">&#39;:&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">path</span>
+</div>
+<div class="viewcode-block" id="rm"><a class="viewcode-back" href="../../../reference/rootpy.io.html#rootpy.io.utils.rm">[docs]</a><span class="k">def</span> <span class="nf">rm</span><span class="p">(</span><span class="n">path_to_object</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s">&#39;;*&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Delete an object in a TDirectory</span>
+
+<span class="sd">    You must pass the path string, relative to the CWD</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c"># Save state</span>
+    <span class="n">current_path</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span><span class="o">.</span><span class="n">GetPathStatic</span><span class="p">()</span>
+    <span class="c"># Get the location of the thing to be deleted</span>
+    <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path_to_object</span><span class="p">)</span>
+    <span class="n">objname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path_to_object</span><span class="p">)</span>
+    <span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
+    <span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span><span class="o">.</span><span class="n">Delete</span><span class="p">(</span><span class="n">objname</span> <span class="o">+</span> <span class="n">cycle</span><span class="p">)</span>
+    <span class="c"># Restore state</span>
+    <span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">current_path</span><span class="p">)</span>
+
+
+<span class="c"># This is not trivial as I can&#39;t figure out a way to delete using the same</span>
+<span class="c"># interface as cp (i.e. root objects, not paths)</span>
+<span class="c">#def mv(src, dest_dir, newname=None): pass</span>
+</div>
+<div class="viewcode-block" id="cp"><a class="viewcode-back" href="../../../reference/rootpy.io.html#rootpy.io.utils.cp">[docs]</a><span class="k">def</span> <span class="nf">cp</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest_dir</span><span class="p">,</span> <span class="n">newname</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Copy an object into another TDirectory.</span>
+
+<span class="sd">    [src] or [dest_dir] can either be passed as path strings, or as</span>
+<span class="sd">    ROOT objects themselves.</span>
+
+<span class="sd">    If &lt;src&gt; is a TDirectory, the objects will be copied recursively.</span>
+
+<span class="sd">    [exclude] can optionally be a function which takes (path, object_name)</span>
+<span class="sd">    and if returns True excludes objects from being copied.</span>
+
+<span class="sd">    The copied object can optionally be given a [newname].</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c"># Always save/restore the state of gDirectory.  Have to use the string path,</span>
+    <span class="c"># otherwise gDirectory will change out from under us</span>
+    <span class="n">current_path</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span><span class="o">.</span><span class="n">GetPathStatic</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">asrootpy</span><span class="p">(</span><span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">src</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+        <span class="n">dest_dir</span> <span class="o">=</span> <span class="n">asrootpy</span><span class="p">(</span><span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">))</span>
+
+    <span class="c"># Check if the object we are copying is not a directory.  Then this is easy.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TDirectory</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">newname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">src</span><span class="o">.</span><span class="n">SetName</span><span class="p">(</span><span class="n">newname</span><span class="p">)</span>
+        <span class="n">dest_dir</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+        <span class="n">src</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c"># We need to copy a directory</span>
+        <span class="n">cp_name</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">newname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cp_name</span> <span class="o">=</span> <span class="n">newname</span>
+        <span class="c"># See if the directory already exists</span>
+        <span class="n">new_dir</span> <span class="o">=</span> <span class="n">dest_dir</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">cp_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">new_dir</span><span class="p">:</span>
+            <span class="c"># It doesn&#39;t exist, make the new directory in the destination</span>
+            <span class="n">new_dir</span> <span class="o">=</span> <span class="n">dest_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">cp_name</span><span class="p">)</span>
+        <span class="c"># Copy everything in the src directory to the destination directory</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">objects</span><span class="p">)</span> <span class="ow">in</span> <span class="n">walk</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">maxdepth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c"># Copy all the objects</span>
+            <span class="k">for</span> <span class="n">object_name</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">exclude</span> <span class="ow">and</span> <span class="n">exclude</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">object_name</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="nb">object</span> <span class="o">=</span> <span class="n">asrootpy</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">object_name</span><span class="p">))</span>
+                <span class="c"># Recursively copy the sub-objects into the dest. dir</span>
+                <span class="n">cp</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">new_dir</span><span class="p">)</span>
+    <span class="c"># Restore the state when done</span>
+    <span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">current_path</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2011, Noel Dawe, Jeff Klukas.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>

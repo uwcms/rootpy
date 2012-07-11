@@ -1,0 +1,204 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>physics Package &mdash; rootpy 0.7.0-a0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.7.0-a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="rootpy 0.7.0-a0 documentation" href="../index.html" />
+    <link rel="up" title="math Package" href="rootpy.math.html" />
+    <link rel="next" title="stats Package" href="rootpy.math.stats.html" />
+    <link rel="prev" title="linalg Package" href="rootpy.math.linalg.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/clean_small.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+  
+    <a href="http://github.com/rootpy/rootpy"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rootpy.math.stats.html" title="stats Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rootpy.math.linalg.html" title="linalg Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">rootpy 0.7.0-a0 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >rootpy</a> &raquo;</li>
+          <li><a href="rootpy.html" >rootpy Package</a> &raquo;</li>
+          <li><a href="rootpy.math.html" accesskey="U">math Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="physics-package">
+<h1>physics Package<a class="headerlink" href="#physics-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-rootpy.math.physics.measure">
+<span id="measure-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">measure</span></tt> Module<a class="headerlink" href="#module-rootpy.math.physics.measure" title="Permalink to this headline">¶</a></h2>
+<p>A module containing scale factors for physical quantities</p>
+<dl class="function">
+<dt id="rootpy.math.physics.measure.convert">
+<tt class="descclassname">rootpy.math.physics.measure.</tt><tt class="descname">convert</tt><big>(</big><em>origin</em>, <em>target</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/physics/measure.html#convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.physics.measure.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the factor required to multiply the
+origin by to express in terms of target</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rootpy.math.physics.vector">
+<span id="vector-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">vector</span></tt> Module<a class="headerlink" href="#module-rootpy.math.physics.vector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rootpy.math.physics.vector.LorentzRotation">
+<em class="property">class </em><tt class="descclassname">rootpy.math.physics.vector.</tt><tt class="descname">LorentzRotation</tt><big>(</big><em>Double_t</em>, <em>Double_t</em>, <em>Double_t</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/physics/vector.html#LorentzRotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.physics.vector.LorentzRotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.math.physics.vector._arithmetic_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">rootpy.core._copy_construct_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">rootpy.core._repr_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TLorentzRotation</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.math.physics.vector.LorentzVector">
+<em class="property">class </em><tt class="descclassname">rootpy.math.physics.vector.</tt><tt class="descname">LorentzVector</tt><big>(</big><em>Double_t x=0.0</em>, <em>Double_t y=0.0</em>, <em>Double_t z=0.0</em>, <em>Double_t t=0.0</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/physics/vector.html#LorentzVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.physics.vector.LorentzVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.math.physics.vector._arithmetic_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">rootpy.core._copy_construct_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">rootpy.core._repr_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TLorentzVector</span></tt></p>
+<dl class="method">
+<dt id="rootpy.math.physics.vector.LorentzVector.Angle">
+<tt class="descname">Angle</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/physics/vector.html#LorentzVector.Angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.physics.vector.LorentzVector.Angle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.math.physics.vector.LorentzVector.BoostVector">
+<tt class="descname">BoostVector</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/rootpy/math/physics/vector.html#LorentzVector.BoostVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.physics.vector.LorentzVector.BoostVector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.math.physics.vector.LorentzVector.angle">
+<tt class="descname">angle</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#rootpy.math.physics.vector.LorentzVector.angle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.math.physics.vector.LorentzVector.boostVector">
+<tt class="descname">boostVector</tt><big>(</big><big>)</big><a class="headerlink" href="#rootpy.math.physics.vector.LorentzVector.boostVector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.math.physics.vector.Rotation">
+<em class="property">class </em><tt class="descclassname">rootpy.math.physics.vector.</tt><tt class="descname">Rotation</tt><big>(</big><em>const TRotation&amp;</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/physics/vector.html#Rotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.physics.vector.Rotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.math.physics.vector._arithmetic_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">rootpy.core._copy_construct_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">rootpy.core._repr_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TRotation</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.math.physics.vector.Vector2">
+<em class="property">class </em><tt class="descclassname">rootpy.math.physics.vector.</tt><tt class="descname">Vector2</tt><big>(</big><em>Double_t x0</em>, <em>Double_t y0</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/physics/vector.html#Vector2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.physics.vector.Vector2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.math.physics.vector._arithmetic_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">rootpy.core._copy_construct_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">rootpy.core._repr_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TVector2</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rootpy.math.physics.vector.Vector3">
+<em class="property">class </em><tt class="descclassname">rootpy.math.physics.vector.</tt><tt class="descname">Vector3</tt><big>(</big><em>Double_t x=0.0</em>, <em>Double_t y=0.0</em>, <em>Double_t z=0.0</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/physics/vector.html#Vector3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.physics.vector.Vector3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rootpy.math.physics.vector._arithmetic_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">rootpy.core._copy_construct_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">rootpy.core._repr_mixin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">ROOT.TVector3</span></tt></p>
+<dl class="method">
+<dt id="rootpy.math.physics.vector.Vector3.Angle">
+<tt class="descname">Angle</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="../_modules/rootpy/math/physics/vector.html#Vector3.Angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rootpy.math.physics.vector.Vector3.Angle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rootpy.math.physics.vector.Vector3.angle">
+<tt class="descname">angle</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#rootpy.math.physics.vector.Vector3.angle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">physics Package</a><ul>
+<li><a class="reference internal" href="#module-rootpy.math.physics.measure"><tt class="docutils literal"><span class="pre">measure</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-rootpy.math.physics.vector"><tt class="docutils literal"><span class="pre">vector</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">rootpy</a><ul>
+  <li><a href="rootpy.html">rootpy Package</a><ul>
+  <li><a href="rootpy.math.html">math Package</a><ul>
+      <li>Previous: <a href="rootpy.math.linalg.html" title="previous chapter">linalg Package</a></li>
+      <li>Next: <a href="rootpy.math.stats.html" title="next chapter">stats Package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/rootpy.math.physics.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2011, Noel Dawe, Jeff Klukas.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>

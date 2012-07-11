@@ -1,0 +1,204 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; rootpy 0.7.0-a0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.7.0-a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="rootpy 0.7.0-a0 documentation" href="index.html" />
+    <link rel="next" title="Tutorials" href="tutorials/index.html" />
+    <link rel="prev" title="rootpy" href="index.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="_static/clean_small.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+  
+  
+    <a href="http://github.com/rootpy/rootpy"><img style="position: fixed; top: 0; right: 0; border: 0;"
+    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorials/index.html" title="Tutorials"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="rootpy"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">rootpy 0.7.0-a0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>At least Python version 2.6 and
+<a class="reference external" href="http://root.cern.ch/">ROOT</a> with <a class="reference external" href="http://root.cern.ch/drupal/content/pyroot">PyROOT</a> enabled.
+<a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib</a>, <a class="reference external" href="http://numpy.scipy.org/">numpy</a>,
+<a class="reference external" href="http://www.pytables.org/">PyTables</a>, and <a class="reference external" href="http://pyyaml.org/">PyYAML</a> are optional.</p>
+</div>
+<div class="section" id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to install rootpy is with <tt class="docutils literal"><span class="pre">pip</span></tt>.
+To install for all users:</p>
+<div class="highlight-python"><pre>sudo pip install rootpy</pre>
+</div>
+<p>To install in your home directory:</p>
+<div class="highlight-python"><pre>pip install --user rootpy</pre>
+</div>
+<p>If you have obtained a copy of rootpy yourself use the <tt class="docutils literal"><span class="pre">setup.py</span></tt>
+script to install. To install for all users:</p>
+<div class="highlight-python"><pre>sudo python setup.py install</pre>
+</div>
+<p>To install in your home directory:</p>
+<div class="highlight-python"><pre>python setup.py install --user</pre>
+</div>
+<p>To install the optional requirements
+(first download a source distribution if you haven&#8217;t already):</p>
+<div class="highlight-python"><pre>pip install -U -r optional-requirements.txt</pre>
+</div>
+</div>
+<div class="section" id="getting-the-latest-source">
+<h2>Getting the latest source<a class="headerlink" href="#getting-the-latest-source" title="Permalink to this headline">¶</a></h2>
+<p>Clone the code from <a class="reference external" href="http://github.com">github</a> with git:</p>
+<div class="highlight-python"><pre>git clone git://github.com/rootpy/rootpy.git</pre>
+</div>
+<p>or checkout with svn:</p>
+<div class="highlight-python"><pre>svn checkout http://svn.github.com/rootpy/rootpy</pre>
+</div>
+</div>
+<div class="section" id="watch-rootpy-do-tricks">
+<h2>Watch rootpy do tricks<a class="headerlink" href="#watch-rootpy-do-tricks" title="Permalink to this headline">¶</a></h2>
+<p>Ever wish browsing through a ROOT file were as easy as navigating a filesystem in the shell?  Try <tt class="docutils literal"><span class="pre">roosh</span></tt>:</p>
+<div class="highlight-python"><pre>$ roosh testfile.root
+Welcome to the ROOSH terminal
+type help for help
+testfile.root &gt; ls
+dimensions  efficiencies  gaps  graphs  means  scales
+dimensions &gt; cd means/
+means &gt; ls
+hist1  hist2  hist3  hist4</pre>
+</div>
+<p>Ever wish that accessing objects in a ROOT file didn&#8217;t involve so much writing? <tt class="docutils literal"><span class="pre">rootpy</span></tt> understands:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rootpy.io</span> <span class="kn">import</span> <span class="n">File</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rootpy.test</span> <span class="kn">import</span> <span class="n">filename</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">testfile</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">)</span>             <span class="c"># File wraps ROOT.TFile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">top</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">objects</span> <span class="ow">in</span> <span class="n">testfile</span><span class="p">:</span> <span class="k">print</span> <span class="n">top</span> <span class="c"># in analogy to os.walk</span>
+<span class="gp">...</span>
+
+<span class="go">dimensions</span>
+<span class="go">scales</span>
+<span class="go">means</span>
+<span class="go">graphs</span>
+<span class="go">gaps</span>
+<span class="go">efficiencies</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span> <span class="o">=</span> <span class="n">testfile</span><span class="o">.</span><span class="n">efficiencies</span><span class="o">.</span><span class="n">hist1</span>            <span class="c"># no need for GetDirectory</span>
+</pre></div>
+</div>
+<p>Ever wish manipulating ROOT objects were more pythonic?  <tt class="docutils literal"><span class="pre">rootpy</span></tt> does that:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rootpy.test</span> <span class="kn">import</span> <span class="n">testfile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span> <span class="o">=</span> <span class="n">testfile</span><span class="o">.</span><span class="n">means</span><span class="o">.</span><span class="n">hist1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span>                                    <span class="c"># pythonic access to histogram contents</span>
+<span class="go">[204.0, 478.0, 771.0, 975.0, 947.0, 721.0, 431.0, 238.0, 94.0, 22.0, 6.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                                       <span class="c"># bin indices start at 0</span>
+<span class="go">204.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>                                      <span class="c"># ...support negative values</span>
+<span class="go">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>                                     <span class="c"># ...and can handle slicing</span>
+<span class="go">[975.0, 947.0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span><span class="o">.</span><span class="n">xedges</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>                               <span class="c"># added convenience methods</span>
+<span class="go">50.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span> <span class="o">+=</span> <span class="n">testfile</span><span class="o">.</span><span class="n">means</span><span class="o">.</span><span class="n">hist2</span>                  <span class="c"># operators act like you&#39;d expect</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#install">Install</a></li>
+<li><a class="reference internal" href="#getting-the-latest-source">Getting the latest source</a></li>
+<li><a class="reference internal" href="#watch-rootpy-do-tricks">Watch rootpy do tricks</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">rootpy</a></li>
+      <li>Next: <a href="tutorials/index.html" title="next chapter">Tutorials</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/start.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2011, Noel Dawe, Jeff Klukas.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+  </body>
+</html>
