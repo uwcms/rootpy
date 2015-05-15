@@ -1,15 +1,26 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
+from __future__ import absolute_import
+
 import logging
 import re
 import sys
 import traceback
 import types
-
 import threading
+
+__all__ = [
+    'log_stack',
+    'ExtendedLogger',
+    'RootLoggerWrapper',
+]
+
+
 class ShowingStack(threading.local):
     inside = False
+
 showing_stack = ShowingStack()
+
 
 def log_stack(logger, level=logging.INFO, limit=None, frame=None):
     """
@@ -31,12 +42,13 @@ def log_stack(logger, level=logging.INFO, limit=None, frame=None):
         showing_stack.inside = False
 
 LoggerClass = logging.getLoggerClass()
+
+
 class ExtendedLogger(LoggerClass):
     """
     A logger class which provides a few niceties, including automatically
     enabling logging if no handlers are available.
     """
-
     def __init__(self, name, *args, **kwargs):
         LoggerClass.__init__(self, name, *args, **kwargs)
         self._init(self)
@@ -49,12 +61,12 @@ class ExtendedLogger(LoggerClass):
         self.__dict__.update(logging._levelNames)
         self.show_stack_regexes = []
         self.shown_stack_frames = set()
-    
+
     def showdeletion(self, *objects):
         """
         Record a stack trace at the point when an ROOT TObject is deleted
         """
-        import rootpy.memory.showdeletion as S
+        from ..memory import showdeletion as S
         for o in objects:
             S.monitor_object_cleanup(o)
 
@@ -71,7 +83,7 @@ class ExtendedLogger(LoggerClass):
                 ROOT.Warning("location", "this message is ignored")
 
         """
-        from rootpy.logger import LogFilter
+        from . import LogFilter
         return LogFilter(self, message_regex)
 
     def trace(self, level=logging.DEBUG, show_enter=True, show_exit=True):
@@ -108,17 +120,15 @@ class ExtendedLogger(LoggerClass):
 
         .. sourcecode:: none
 
-
-
         """
-        from rootpy.logger import log_trace
+        from . import log_trace
         return log_trace(self, level, show_enter, show_exit)
 
     def basic_config_colorized(self):
         """
         Configure logging with a coloured output.
         """
-        from rootpy.logger.color import default_log_handler
+        from .color import default_log_handler
         default_log_handler()
 
     def have_handlers(self):
@@ -129,7 +139,7 @@ class ExtendedLogger(LoggerClass):
             logger = logger.parent
         return False
 
-    def showstack(self, message_regex="^.*$", min_level=logging.DEBUG,
+    def show_stack(self, message_regex="^.*$", min_level=logging.DEBUG,
         limit=4096, once=True):
         """
         Enable showing the origin of log messages by dumping a stack trace into
@@ -182,9 +192,7 @@ class ExtendedLogger(LoggerClass):
                     # Prevent this stack frame from being shown again
                     logger.shown_stack_frames.add(unique)
                 depths.append(depth)
-
             logger = logger.parent
-
         return max(depths)
 
     def maybeShowStack(self, record):
@@ -192,7 +200,6 @@ class ExtendedLogger(LoggerClass):
         if frame.f_code.co_name == "python_logging_error_handler":
             # Special case, don't show python messsage handler in backtrace
             frame = frame.f_back
-
         depth = self.show_stack_depth(record, frame)
         if depth > 0:
             log_stack(self["/stack"], record.levelno, limit=depth, frame=frame)
@@ -200,11 +207,8 @@ class ExtendedLogger(LoggerClass):
     def callHandlers(self, record):
         if self.isEnabledFor(record.levelno) and not self.have_handlers():
             self.basic_config_colorized()
-
             l = self.getLogger("rootpy.logger")
-            l.info("| No default log handler configured. See `logging` module |")
-            l.info("\    To suppress: 'rootpy.log.basic_config_colorized()'   /")
-        
+            l.debug("Using rootpy's default log handler")
         result = LoggerClass.callHandlers(self, record)
         self.maybeShowStack(record)
         return result
@@ -235,19 +239,17 @@ class ExtendedLogger(LoggerClass):
             if suffix.startswith(self.name + "."):
                 # Remove duplicate prefix
                 suffix = suffix[len(self.name + "."):]
-                
                 suf_parts = suffix.split(".")
                 if len(suf_parts) > 1 and suf_parts[-1] == suf_parts[-2]:
                     # If we have a submodule's name equal to the parent's name,
                     # omit it.
                     suffix = ".".join(suf_parts[:-1])
-                    
             suffix = '.'.join((self.name, suffix))
-            
         return self.manager.getLogger(suffix)
 
     def __repr__(self):
         return "<ExtendedLogger {0} at 0x{1:x}>".format(self.name, id(self))
+
 
 class RootLoggerWrapper(ExtendedLogger):
     """

@@ -1,7 +1,7 @@
-distribute-*
 *.egg-info
 *.pyc
 *.d
+*.o
 *.so
 *~
 *.root
@@ -10,6 +10,7 @@ distribute-*
 *.png
 *.jpg
 *.eps
+*.gif
 .nfs*
 build
 dist
@@ -21,3 +22,5 @@ temp/*
 .settings
 .coverage
 coverage
+ez_setup.py
+setuptools-*

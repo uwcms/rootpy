@@ -3,22 +3,30 @@
 """
 This module handles creation of the user-data area
 """
+from __future__ import absolute_import
+
 import os
-import sys
 import tempfile
 import atexit
-
 from os.path import expanduser, expandvars, exists, isdir, join as pjoin
 from platform import machine
 
 from . import log; log = log[__name__]
-from . import QROOT
-from rootpy.defaults import extra_initialization
+from . import QROOT, IN_NOSETESTS
+from .defaults import extra_initialization
+
+__all__ = [
+    'DATA_ROOT',
+    'CONFIG_ROOT',
+    'BINARY_PATH',
+    'ARCH',
+]
 
 if "XDG_CONFIG_HOME" not in os.environ:
     os.environ["XDG_CONFIG_HOME"] = expanduser('~/.config')
 if "XDG_CACHE_HOME" not in os.environ:
     os.environ["XDG_CACHE_HOME"] = expanduser('~/.cache')
+
 
 def ensure_directory(variable, default):
     path = os.getenv(variable)
@@ -37,17 +45,22 @@ def ensure_directory(variable, default):
         path = None
     return path
 
+
 DATA_ROOT = CONFIG_ROOT = None
-if (os.getenv('ROOTPY_GRIDMODE') not in ('1', 'true') and
-    not sys.argv[0].endswith('nosetests')) or os.getenv('DEBUG', None):
-    DATA_ROOT = ensure_directory('ROOTPY_DATA', '${XDG_CACHE_HOME}/rootpy')
-    CONFIG_ROOT = ensure_directory('ROOTPY_CONFIG', '${XDG_CONFIG_HOME}/rootpy')
+GRID_MODE = os.getenv('ROOTPY_GRIDMODE') in ('1', 'true')
+
+if (os.getenv('DEBUG', None) or not (GRID_MODE or IN_NOSETESTS)):
+    DATA_ROOT = ensure_directory(
+        'ROOTPY_DATA', '${XDG_CACHE_HOME}/rootpy')
+    CONFIG_ROOT = ensure_directory(
+        'ROOTPY_CONFIG', '${XDG_CONFIG_HOME}/rootpy')
 
 if DATA_ROOT is None:
     log.info("Placing user data in /tmp.")
-    log.warning("Make sure '~/.cache/rootpy' or $ROOTPY_DATA is a writable "
-                "directory so that it isn't necessary to recreate all user "
-                "data each time")
+    log.warning(
+        "Make sure '~/.cache/rootpy' or $ROOTPY_DATA is a writable "
+        "directory so that it isn't necessary to recreate all user "
+        "data each time")
 
     DATA_ROOT = tempfile.mkdtemp()
 
@@ -61,6 +74,7 @@ BINARY_PATH = None
 ARCH = "{0}-{1}".format(machine(), QROOT.gROOT.GetVersionInt())
 if BINARY_PATH is None:
     BINARY_PATH = pjoin(DATA_ROOT, ARCH)
+
 
 @extra_initialization
 def show_binary_path():

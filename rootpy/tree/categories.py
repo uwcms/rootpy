@@ -1,7 +1,14 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
+from __future__ import absolute_import
+
 import re
+
 from .cut import Cut
+
+__all__ = [
+    'Categories',
+]
 
 
 class Categories(object):
@@ -9,7 +16,6 @@ class Categories(object):
     Implements a mechanism to ease the creation of cuts that describe
     non-overlapping categories.
     """
-
     #TODO: use pyparsing
     CUT_REGEX = '[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?'
     NODE_PATTERN = re.compile(
@@ -24,9 +30,8 @@ class Categories(object):
 
     @classmethod
     def from_string(cls, string, variables=None):
-
         node = None
-        if variables == None:
+        if variables is None:
             variables = []
         nodematch = re.match(Categories.NODE_PATTERN, string)
         categorymatch = re.match(Categories.CATEGORY_PATTERN, string)
@@ -52,18 +57,19 @@ class Categories(object):
             cuts = categorynodematch.group('cuts').split(',')
             if len(cuts) != len(set(cuts)):
                 raise SyntaxError(
-                        "repeated cuts in '%s'" %
-                        categorynodematch.group('cuts'))
+                    "repeated cuts in '{0}'".format(
+                        categorynodematch.group('cuts')))
             if sorted(cuts) != cuts:
                 raise SyntaxError(
-                        "cuts not in ascending order in '%s'" %
-                        categorynodematch.group('cuts'))
+                    "cuts not in ascending order in '{0}'".format(
+                        categorynodematch.group('cuts')))
             nodes = []
             for cut in cuts:
                 actual_cut = cut.replace('*', '')
-                node = Categories(feature=variables.index(variable),
-                            data=actual_cut,
-                            variables=variables)
+                node = Categories(
+                    feature=variables.index(variable),
+                    data=actual_cut,
+                    variables=variables)
                 if cut.startswith('*'):
                     node.forbidleft = True
                 if cut.endswith('*'):
@@ -77,22 +83,25 @@ class Categories(object):
             variable = (nodematch.group('variable'), var_type)
             if variable not in variables:
                 variables.append(variable)
-            node = Categories(feature=variables.index(variable),
-                        data=nodematch.group('cut'),
-                        variables=variables)
+            node = Categories(
+                feature=variables.index(variable),
+                data=nodematch.group('cut'),
+                variables=variables)
             if nodematch.group('leftchild'):
-                leftchild = cls.from_string(nodematch.group('leftchild'), variables)
+                leftchild = cls.from_string(
+                    nodematch.group('leftchild'), variables)
                 node.set_left(leftchild)
             if nodematch.group('rightchild'):
-                rightchild = cls.from_string(nodematch.group('rightchild'), variables)
+                rightchild = cls.from_string(
+                    nodematch.group('rightchild'), variables)
                 node.set_right(rightchild)
         else:
-            raise SyntaxError("%s is not valid category tree syntax" % string)
+            raise SyntaxError(
+                "{0} is not valid category tree syntax".format(string))
         return node
 
     @classmethod
     def make_balanced_tree(cls, nodes):
-
         if len(nodes) == 0:
             return None
         if len(nodes) == 1:
@@ -116,7 +125,6 @@ class Categories(object):
                  parent=None,
                  forbidleft=False,
                  forbidright=False):
-
         self.feature = feature
         self.data = data
         self.variables = variables
@@ -127,24 +135,23 @@ class Categories(object):
         self.forbidright = forbidright
 
     def clone(self):
-
         leftclone = None
         if self.leftchild is not None:
             leftclone = self.leftchild.clone()
         rightclone = None
         if self.rightchild is not None:
             rightclone = self.rightchild.clone()
-        return Categories(self.feature,
-                self.data,
-                self.variables,
-                leftclone,
-                rightclone,
-                self.parent,
-                self.forbidleft,
-                self.forbidright)
+        return Categories(
+            self.feature,
+            self.data,
+            self.variables,
+            leftclone,
+            rightclone,
+            self.parent,
+            self.forbidleft,
+            self.forbidright)
 
     def __str__(self):
-
         leftstr = ''
         rightstr = ''
         if self.forbidleft:
@@ -156,17 +163,15 @@ class Categories(object):
         elif self.rightchild is not None:
             rightstr = str(self.rightchild)
         if self.feature >= 0:
-            return "{%s:%s|%s%s%s}" % (
-                    self.variables[self.feature]
-                    + (leftstr, str(self.data), rightstr))
-        return "{<<leaf>>|%s}" % (str(self.data))
+            return '{{0}:{1}|{2}{3}{4}}'.format(
+                self.variables[self.feature],
+                leftstr, str(self.data), rightstr)
+        return '{<<leaf>>|{0}}'.format(str(self.data))
 
     def __repr__(self):
-
         return self.__str__()
 
     def set_left(self, child):
-
         if child is self:
             raise ValueError("attempted to set self as left child!")
         self.leftchild = child
@@ -174,7 +179,6 @@ class Categories(object):
             child.parent = self
 
     def set_right(self, child):
-
         if child is self:
             raise ValueError("attempted to set self as right child!")
         self.rightchild = child
@@ -182,15 +186,12 @@ class Categories(object):
             child.parent = self
 
     def is_leaf(self):
-
         return self.leftchild is None and self.rightchild is None
 
     def is_complete(self):
-
         return self.leftchild is not None and self.rightchild is not None
 
     def depth(self):
-
         leftdepth = 0
         if self.leftchild is not None:
             leftdepth = self.leftchild.depth() + 1
@@ -200,7 +201,6 @@ class Categories(object):
         return max(leftdepth, rightdepth)
 
     def balance(self):
-
         leftdepth = 0
         rightdepth = 0
         if self.leftchild is not None:
@@ -210,7 +210,6 @@ class Categories(object):
         return rightdepth - leftdepth
 
     def get_leaves(self):
-
         if self.is_leaf():
             return [self]
         leftleaves = []
@@ -222,7 +221,6 @@ class Categories(object):
         return leftleaves + rightleaves
 
     def get_incomplete_children(self):
-
         children = []
         if not self.is_complete():
             children.append(self)
@@ -251,23 +249,24 @@ class Categories(object):
         return total
 
     def walk(self, expression=None):
-
         if expression is None:
             expression = Cut()
         if self.feature < 0:
             if expression:
                 yield expression
         if not self.forbidleft:
-            leftcondition = expression & Cut("%s<=%s" %
-                    (self.variables[self.feature][0], self.data))
+            leftcondition = expression & Cut(
+                '{0}<={1}'.format(
+                    self.variables[self.feature][0], self.data))
             if self.leftchild is not None:
                 for condition in self.leftchild.walk(leftcondition):
                     yield condition
             else:
                 yield leftcondition
         if not self.forbidright:
-            rightcondition = expression & Cut("%s>%s" %
-                    (self.variables[self.feature][0], self.data))
+            rightcondition = expression & Cut(
+                '{0}>{1}'.format(
+                    self.variables[self.feature][0], self.data))
             if self.rightchild is not None:
                 for condition in self.rightchild.walk(rightcondition):
                     yield condition

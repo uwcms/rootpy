@@ -25,6 +25,9 @@
 
 @import url("basic.css");
 @import url(http://fonts.googleapis.com/css?family=Alegreya:700);
+{% if theme_custom_css %}
+@import url("{{ theme_custom_css }}");
+{% endif %}
 
 /* PAGE LAYOUT -------------------------------------------------------------- */
 
@@ -175,6 +178,14 @@ div.body a.headerlink:hover {
     border: none;
 }
 
+a.image-reference { 
+    border-bottom: none;
+}
+
+a.image-reference:hover {
+    border-bottom: none;
+}
+
 
 /* NAVIGATION BAR --------------------------------------------------------- */
 
@@ -239,10 +250,7 @@ div.related ul li a tt {
 /* SIDEBAR ---------------------------------------------------------------- */
 
 div.sphinxsidebarwrapper {
-    padding: 170px 0 0 0;
-    background-image: url('rootpy-logo-80dpi.png');
-    background-repeat: no-repeat;
-    background-position: center 10px;
+    padding: 0 0 0 0;
 }
 
 div.sphinxsidebar {

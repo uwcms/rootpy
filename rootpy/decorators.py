@@ -1,29 +1,68 @@
-import ROOT
+# Copyright 2012 the rootpy developers
+# distributed under the terms of the GNU General Public License
+from __future__ import absolute_import
+
 import os
 import re
 import inspect
+import warnings
+
 from .context import preserve_current_directory
-from .extern import decorator
-from . import gDirectory
+from .extern.decorator import decorator
+from . import ROOT, ROOT_VERSION
+
+__all__ = [
+    'requires_ROOT',
+    'method_file_check',
+    'method_file_cd',
+    'chainable',
+    'camel_to_snake',
+    'snake_case_methods',
+    'sync',
+    'cached_property',
+]
 
 
-CONVERT_SNAKE_CASE = os.getenv('NO_ROOTPY_SNAKE_CASE', False) == False
+CONVERT_SNAKE_CASE = os.getenv('NO_ROOTPY_SNAKE_CASE', False) is False
+
+
+def requires_ROOT(version, exception=False):
+    """
+    A decorator for functions or methods that require a minimum ROOT version.
+    If `exception` is False (the default) a warning is issued and None is
+    returned, otherwise a `NotImplementedError` exception is raised.
+    `exception` may also be an `Exception` in which case it will be raised
+    instead of `NotImplementedError`.
+    """
+    @decorator
+    def wrap(f, *args, **kwargs):
+        if ROOT_VERSION < version:
+            msg = ("{0} requires at least ROOT {1} "
+                   "but you are using {2}".format(
+                       f.__name__, version, ROOT_VERSION))
+            if inspect.isclass(exception) and issubclass(exception, Exception):
+                raise exception
+            elif exception:
+                raise NotImplementedError(msg)
+            warnings.warn(msg)
+            return None
+        return f(*args, **kwargs)
+    return wrap
 
 
 def _get_qualified_name(thing):
-
     if inspect.ismodule(thing):
         return thing.__file__
     if inspect.isclass(thing):
-        return '%s.%s' % (thing.__module__, thing.__name__)
+        return '{0}.{1}'.format(thing.__module__, thing.__name__)
     if inspect.ismethod(thing):
-        return '%s.%s' % (thing.im_class.__name__, thing.__name__)
+        return '{0}.{1}'.format(thing.im_class.__name__, thing.__name__)
     if inspect.isfunction(thing):
         return thing.__name__
     return repr(thing)
 
 
-@decorator.decorator
+@decorator
 def method_file_check(f, self, *args, **kwargs):
     """
     A decorator to check that a TFile as been created before f is called.
@@ -32,19 +71,20 @@ def method_file_check(f, self, *args, **kwargs):
     # This requires special treatment since in Python 3 unbound methods are
     # just functions: http://stackoverflow.com/a/3589335/1002176 but to get
     # consistent access to the class in both 2.x and 3.x, we need self.
-    curr_dir = gDirectory()
+    curr_dir = ROOT.gDirectory.func()
     if isinstance(curr_dir, ROOT.TROOT):
         raise RuntimeError(
-            "You must first create a File before calling %s.%s" % (
-            self.__class__.__name__, _get_qualified_name(f)))
+            "You must first create a File before calling {0}.{1}".format(
+                self.__class__.__name__, _get_qualified_name(f)))
     if not curr_dir.IsWritable():
         raise RuntimeError(
-            "Calling %s.%s requires that the current File is writable" % (
-            self.__class__.__name__, _get_qualified_name(f)))
+            "Calling {0}.{1} requires that the "
+            "current File is writable".format(
+                self.__class__.__name__, _get_qualified_name(f)))
     return f(self, *args, **kwargs)
 
 
-@decorator.decorator
+@decorator
 def method_file_cd(f, self, *args, **kwargs):
     """
     A decorator to cd back to the original directory where this object was
@@ -56,7 +96,7 @@ def method_file_cd(f, self, *args, **kwargs):
         return f(self, *args, **kwargs)
 
 
-@decorator.decorator
+@decorator
 def chainable(f, self, *args, **kwargs):
     """
     Decorator which causes a 'void' function to return self
@@ -85,41 +125,98 @@ def camel_to_snake(name):
 def snake_case_methods(cls, debug=False):
     """
     A class decorator adding snake_case methods
-    that alias capitalized ROOT methods
+    that alias capitalized ROOT methods. cls must subclass
+    a ROOT class and define the _ROOT class variable.
     """
     if not CONVERT_SNAKE_CASE:
         return cls
-    # Fix both the class and its corresponding ROOT base class
-    #TODO use the class property on Object
-    root_base = cls.__bases__[-1]
+    # get the ROOT base class
+    root_base = cls._ROOT
     members = inspect.getmembers(root_base)
     # filter out any methods that already exist in lower and uppercase forms
     # i.e. TDirectory::cd and Cd...
-    names = [item[0].capitalize() for item in members]
-    duplicate_idx = set()
-    seen = []
-    for i, n in enumerate(names):
-        try:
-            idx = seen.index(n)
-            duplicate_idx.add(i)
-            duplicate_idx.add(idx)
-        except ValueError:
-            seen.append(n)
-    for i, (name, member) in enumerate(members):
-        if i in duplicate_idx:
+    names = {}
+    for name, member in members:
+        lower_name = name.lower()
+        if lower_name in names:
+            del names[lower_name]
+        else:
+            names[lower_name] = None
+
+    for name, member in members:
+        if name.lower() not in names:
             continue
         # Don't touch special methods or methods without cap letters
         if name[0] == '_' or name.islower():
             continue
         # Is this a method of the ROOT base class?
-        if inspect.ismethod(member):
-            # convert CamelCase to snake_case
-            new_name = camel_to_snake(name)
-            if debug:
-                print "%s -> %s" % (name, new_name)
-                if hasattr(cls, new_name):
-                    raise ValueError(
-                            '%s is already a method for %s' %
-                            (new_name, cls.__name__))
-            setattr(cls, new_name, getattr(cls, name))
+        if not inspect.ismethod(member) and not inspect.isfunction(member):
+            continue
+        # convert CamelCase to snake_case
+        new_name = camel_to_snake(name)
+        # Use a __dict__ lookup rather than getattr because we _want_ to
+        # obtain the _descriptor_, and not what the descriptor gives us
+        # when it is `getattr`'d.
+        value = None
+        skip = False
+        for c in cls.mro():
+            # skip methods that are already overridden
+            if new_name in c.__dict__:
+                skip = True
+                break
+            if name in c.__dict__:
+                value = c.__dict__[name]
+                break
+        # <neo>Woah, a use for for-else</neo>
+        else:
+            # Weird. Maybe the item lives somewhere else, such as on the
+            # metaclass?
+            value = getattr(cls, name)
+        if skip:
+            continue
+        setattr(cls, new_name, value)
     return cls
+
+
+def sync(lock):
+    """
+    A synchronization decorator
+    """
+    @decorator
+    def sync(f):
+        def new_function(*args, **kw):
+            lock.acquire()
+            try:
+                return f(*args, **kw)
+            finally:
+                lock.release()
+        return new_function
+    return sync
+
+
+class cached_property(object):
+    """
+    Computes attribute value and caches it in the instance.
+    Written by Denis Otkidach and published in the Python Cookbook.
+    This decorator allows you to create a property which can be computed once
+    and accessed many times. Sort of like memoization.
+    """
+    def __init__(self, method, name=None):
+        # record the unbound-method and the name
+        self.method = method
+        self.name = name or method.__name__
+        self.__doc__ = method.__doc__
+
+    def __get__(self, inst, cls):
+        # self: <__main__.cache object at 0xb781340c>
+        # inst: <__main__.Foo object at 0xb781348c>
+        # cls: <class '__main__.Foo'>
+        if inst is None:
+            # instance attribute accessed on class, return self
+            # You get here if you write `Foo.bar`
+            return self
+        # compute, cache and return the instance's attribute value
+        result = self.method(inst)
+        # setattr redefines the instance's attribute so this doesn't get called again
+        setattr(inst, self.name, result)
+        return result

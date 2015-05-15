@@ -1,41 +1,47 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
+from __future__ import absolute_import
+
 import ROOT
+
 import os
 import sys
 import multiprocessing
 from multiprocessing import Process
 import uuid
-
-from ..logger import multilogging
-from .. import log; log = log[__name__]
+import traceback
+import signal
+import cProfile as profile
+import subprocess
 import logging
 try:
     logging.captureWarnings(True)
 except AttributeError:
     pass
 
-import traceback
-import signal
-from rootpy.io import root_open
-import cProfile as profile
-import subprocess
+from .. import log; log = log[__name__]
+from ..logger import multilogging
+from ..io import root_open
+
+__all__ = [
+    'Student',
+]
 
 
 class Student(Process):
 
     def __init__(self,
-            name,
-            files,
-            output_queue,
-            logging_queue,
-            gridmode=False,
-            metadata=None,
-            profile=False,
-            nice=0,
-            **kwargs):
+                 name,
+                 files,
+                 output_queue,
+                 logging_queue,
+                 gridmode=False,
+                 metadata=None,
+                 profile=False,
+                 nice=0,
+                 **kwargs):
 
-        Process.__init__(self)
+        super(Student, self).__init__()
         self.uuid = uuid.uuid4().hex
         self.filters = {}
         self.name = name
@@ -48,67 +54,81 @@ class Student(Process):
         self.nice = nice
         self.kwargs = kwargs
         self.output = None
-        self.queuemode = isinstance(files, multiprocessing.queues.Queue)
+        if self.gridmode:
+            self.queuemode = False
+        else:
+            self.queuemode = isinstance(files, multiprocessing.queues.Queue)
         self.profile = profile
+
+    def __repr__(self):
+        return '{0}(id={1})'.format(self.name, self.uuid)
 
     def run(self):
 
-        # ignore sigterm signal and let parent process take care of this
-        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        if not self.gridmode:
+            # ignore sigterm signal and let the supervisor process handle this
+            signal.signal(signal.SIGINT, signal.SIG_IGN)
+            h = multilogging.QueueHandler(self.logging_queue)
+            # get the top-level logger
+            log_root = logging.getLogger()
+            # clear any existing handlers in the top-level logger
+            log_root.handlers = []
+            # add the queuehandler
+            log_root.addHandler(h)
+            # direct stdout and stderr to the local logger
+            sys.stdout = multilogging.stdout(log)
+            sys.stderr = multilogging.stderr(log)
 
         ROOT.gROOT.SetBatch()
 
         os.nice(self.nice)
 
-        h = multilogging.QueueHandler(self.logging_queue)
-        # get the top-level logger
-        log_root = logging.getLogger()
-        # clear any existing handlers in the top-level logger
-        log_root.handlers = []
-        # add the queuehandler
-        log_root.addHandler(h)
-
-        if not self.gridmode:
-            # direct stdout and stderr to the local logger
-            sys.stdout = multilogging.stdout(log)
-            sys.stderr = multilogging.stderr(log)
-
         try:
-            filename = 'student-%s-%s.root' % (self.name, self.uuid)
+            filename = 'student-{0}-{1}.root'.format(
+                self.name, self.uuid)
             with root_open(os.path.join(
                     os.getcwd(), filename), 'recreate') as self.output:
-                ROOT.gROOT.SetBatch(True)
                 if self.queuemode:
                     log.info("Receiving files from Supervisor's queue")
                 else:
                     log.info(
-                            "Received %i files from Supervisor for processing" %
-                            len(self.files))
+                        "Received {0:d} files from Supervisor "
+                        "for processing".format(
+                            len(self.files)))
                 self.output.cd()
                 if self.profile:
-                    profile_filename = 'student-%s-%s.profile' % (
-                            self.name, self.uuid)
-                    profile.runctx('self.work()',
-                            globals=globals(),
-                            locals=locals(),
-                            filename=profile_filename)
-                    self.output_queue.put(
-                            (self.uuid,
-                                [self.filters,
-                                 self.output.GetName(),
-                                 profile_filename]))
+                    profile_filename = 'student-{0}-{1}.profile'.format(
+                        self.name, self.uuid)
+                    profile.runctx(
+                        'self.work()',
+                        globals=globals(),
+                        locals=locals(),
+                        filename=profile_filename)
+                    result = (
+                        self.uuid,
+                        [self.filters,
+                         self.output.GetName(),
+                         profile_filename])
                 else:
                     self.work()
-                    self.output_queue.put(
-                            (self.uuid,
-                                [self.filters, self.output.GetName()]))
+                    result = (
+                        self.uuid,
+                        [self.filters,
+                         self.output.GetName()])
         except:
+            if self.gridmode:
+                raise
             print sys.exc_info()
             traceback.print_tb(sys.exc_info()[2])
-            self.output_queue.put((self.uuid, None))
+            result = (self.uuid, None)
 
-        self.output_queue.close()
-        self.logging_queue.close()
+        if self.gridmode:
+            id, result = result
+            self.output_queue.append(result)
+        else:
+            self.output_queue.put(result)
+            self.output_queue.close()
+            self.logging_queue.close()
 
     @staticmethod
     def merge(inputs, output, metadata):
@@ -124,4 +144,4 @@ class Student(Process):
         You must implement this method in your Student-derived class
         """
         raise NotImplementedError(
-                "implement this method in your Student-derived class")
+            "implement this method in your Student-derived class")

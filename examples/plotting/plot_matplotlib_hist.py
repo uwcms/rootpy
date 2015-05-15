@@ -10,14 +10,18 @@ attributes and displayed via ROOT or matplotlib.
 print __doc__
 import ROOT
 import numpy as np
-import rootpy
-rootpy.log.basic_config_colorized()
 from rootpy.plotting import Hist, HistStack, Legend, Canvas
 from rootpy.plotting.style import get_style, set_style
+from rootpy.plotting.utils import draw
 from rootpy.interactive import wait
 import rootpy.plotting.root2matplotlib as rplt
 import matplotlib.pyplot as plt
 from matplotlib.ticker import AutoMinorLocator, MultipleLocator
+
+# set the style
+style = get_style('ATLAS')
+style.SetEndErrorSize(3)
+set_style(style)
 
 # set the random seed
 ROOT.gRandom.SetSeed(42)
@@ -28,9 +32,9 @@ signal = 126 + 10 * np.random.randn(100)
 signal_obs = 126 + 10 * np.random.randn(100)
 
 # create histograms
-h1 = Hist(30, 40, 200, title='Background', markersize=0)
+h1 = Hist(30, 40, 200, title='Background', markersize=0, legendstyle='F')
 h2 = h1.Clone(title='Signal')
-h3 = h1.Clone(title='Data')
+h3 = h1.Clone(title='Data', drawstyle='E1 X0', legendstyle='LEP')
 h3.markersize = 1.2
 
 # fill the histograms with our distributions
@@ -50,29 +54,13 @@ h2.fillcolor = 'red'
 h2.linecolor = 'red'
 h2.linewidth = 0
 
-stack = HistStack()
-stack.Add(h1)
-stack.Add(h2)
-plot_max = stack.GetMaximum() * 1.2
-# hack to change y-axis range in ROOT
-stack.SetMaximum(plot_max)
+stack = HistStack([h1, h2], drawstyle='HIST E1 X0')
 
 # plot with ROOT
-style = get_style('ATLAS')
-style.SetEndErrorSize(3)
-set_style(style)
 canvas = Canvas(width=700, height=500)
-stack.Draw('HIST E1 X0')
-h3.Draw('SAME E1 X0')
-stack.xaxis.SetTitle('Mass')
-stack.yaxis.SetTitle('Events')
+draw([stack, h3], xtitle='Mass', ytitle='Events', pad=canvas)
 # set the number of expected legend entries
-legend = Legend(3)
-legend.AddEntry(h1, 'F')
-legend.AddEntry(h2, 'F')
-legend.AddEntry(h3, 'LEP')
-legend.SetBorderSize(0)
-legend.SetMargin(0.3)
+legend = Legend([h1, h2, h3], leftmargin=0.45, margin=0.3)
 legend.Draw()
 label = ROOT.TText(0.3, 0.8, 'ROOT')
 label.SetTextFont(43)
@@ -84,18 +72,17 @@ canvas.Update()
 
 # plot with matplotlib
 set_style('ATLAS', mpl=True)
-fig = plt.figure()
+fig = plt.figure(figsize=(7, 5), dpi=100)
 axes = plt.axes()
 axes.xaxis.set_minor_locator(AutoMinorLocator())
 axes.yaxis.set_minor_locator(AutoMinorLocator())
 axes.yaxis.set_major_locator(MultipleLocator(20))
 rplt.bar(stack, stacked=True, axes=axes)
-rplt.errorbar(h3, xerr=False, emptybins=False, axes=axes, markersize=8)
-plt.xlabel('Mass', position=(1., 0.), ha='right')
-plt.ylabel('Events', position=(0., 1.), va='top')
-axes.xaxis.set_label_coords(1., -0.12)
-axes.yaxis.set_label_coords(-0.12, 1.)
-axes.set_ylim(0, plot_max)
+rplt.errorbar(h3, xerr=False, emptybins=False, axes=axes)
+plt.xlabel('Mass', position=(1., 0.), va='bottom', ha='right')
+plt.ylabel('Events', position=(0., 1.), va='top', ha='right')
+axes.xaxis.set_label_coords(1., -0.20)
+axes.yaxis.set_label_coords(-0.18, 1.)
 leg = plt.legend()
 axes.text(0.3, 0.8, 'matplotlib',
           verticalalignment='center', horizontalalignment='center',
@@ -103,6 +90,5 @@ axes.text(0.3, 0.8, 'matplotlib',
 
 if not ROOT.gROOT.IsBatch():
     plt.show()
-
-# wait for you to close the canvas before exiting
-wait(True)
+    # wait for you to close the ROOT canvas before exiting
+    wait(True)

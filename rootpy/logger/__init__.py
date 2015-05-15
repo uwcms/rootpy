@@ -1,11 +1,8 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
 """
-:py:mod:`rootpy.logger`
-=======================
-
-:py:mod:`rootpy` overrides the default logging class, inserting a check that there
-exists a default logging handler. If there is not, it adds one.
+:py:mod:`rootpy` overrides the default logging class, inserting a check that
+there exists a default logging handler. If there is not, it adds one.
 
 In additon, this can be used to intercept ROOT's log messages and redirect them
 through python's logging subsystem
@@ -14,7 +11,8 @@ Example use:
 
 .. sourcecode:: python
 
-    # Disable colored logging (not needed if writing into a file, this is automatic).
+    # Disable colored logging (not needed if writing into a file,
+    # this is automatic).
     # Must be done before :py:mod:`rootpy` logs any messages.
     import logging; logging.basicConfig(level=logging.DEBUG)
 
@@ -82,35 +80,46 @@ Example use:
 
 
 """
+from __future__ import absolute_import
 
 import logging
 import os
 import re
 import sys
-
+import threading
 from functools import wraps
 from time import time
 
 # Must import extended_logger, then others.
-import rootpy.logger.extended_logger
+from . import extended_logger
+
 root_logger = logging.getLogger("ROOT")
 log = logging.getLogger("rootpy")
 
 if not os.environ.get("DEBUG", False):
     log.setLevel(log.INFO)
 
-import rootpy.logger.color
-
+from . import color
 from .magic import set_error_handler
-
 # Circular
 from .roothandler import python_logging_error_handler
 
-import threading
+__all__ = [
+    'log_trace',
+    'color',
+    'set_error_handler',
+    'python_logging_error_handler',
+    'extended_logger',
+    'LogFilter',
+    'LiteralFilter',
+]
+
+
 class TraceDepth(threading.local):
     value = -1
 
 trace_depth = TraceDepth()
+
 
 def log_trace(logger, level=logging.DEBUG, show_enter=True, show_exit=True):
     """
@@ -142,6 +151,7 @@ def log_trace(logger, level=logging.DEBUG, show_enter=True, show_exit=True):
         return thunk
     return wrap
 
+
 class LogFilter(logging.Filter):
     def __init__(self, logger, message_regex):
         logging.Filter.__init__(self)
@@ -157,3 +167,26 @@ class LogFilter(logging.Filter):
 
     def filter(self, record):
         return not self.message_regex.match(record.getMessage())
+
+
+class LiteralFilter(logging.Filter):
+    def __init__(self, literals):
+        logging.Filter.__init__(self)
+        self.literals = literals
+
+    def filter(self, record):
+        return record.getMessage() not in self.literals
+
+
+# filter superfluous ROOT warnings
+for histtype in 'CSIFD':
+    for dimen in '123':
+        log["/ROOT.TH{0}{1}.Add".format(dimen, histtype)].addFilter(
+            LiteralFilter([
+                "Attempt to add histograms with different axis limits",]))
+        log["/ROOT.TH{0}{1}.Divide".format(dimen, histtype)].addFilter(
+            LiteralFilter([
+                "Attempt to divide histograms with different axis limits",]))
+        log["/ROOT.TH{0}{1}.Multiply".format(dimen, histtype)].addFilter(
+            LiteralFilter([
+                "Attempt to multiply histograms with different axis limits",]))

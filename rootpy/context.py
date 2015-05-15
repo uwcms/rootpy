@@ -1,17 +1,32 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
-from contextlib import contextmanager
+from __future__ import absolute_import
 
-# Note about locks: we don't need this in cases where ROOT as a thread-specific
-# variable, so gDirectory and gPad are safe.
+import os
+from contextlib import contextmanager
+# Note about locks: we don't need this in cases where ROOT has a
+# thread-specific variable, so gDirectory and gPad are safe.
 # Not so for gStyle, IsBatch and TH1.AddDirectory, so we use a lock in these
 # cases. To prevent out-of-order lock grabbing, just use one reentrant lock for
 # all of them.
 import threading
 LOCK = threading.RLock()
 
-import ROOT
-from . import gDirectory
+from . import ROOT
+from . import log; log = log[__name__]
+
+__all__ = [
+    'preserve_current_style',
+    'preserve_current_canvas',
+    'preserve_current_directory',
+    'preserve_batch_state',
+    'invisible_canvas',
+    'thread_specific_tmprootdir',
+    'set_directory',
+    'preserve_set_th1_add_directory',
+    'working_directory',
+    'do_nothing',
+]
 
 
 @contextmanager
@@ -26,7 +41,8 @@ def preserve_current_style():
         try:
             yield
         finally:
-            ROOT.gROOT.SetStyle(old.GetName())
+            old.cd()
+
 
 @contextmanager
 def preserve_current_canvas():
@@ -40,28 +56,28 @@ def preserve_current_canvas():
     finally:
         if old:
             old.cd()
-
-        else:
+        elif ROOT.gPad.func():
             # Put things back how they were before.
-            if ROOT.gPad.func():
-                with invisible_canvas():
-                    # This is a round-about way of resetting gPad to None.
-                    # No other technique I tried could do it.
-                    pass
+            with invisible_canvas():
+                # This is a round-about way of resetting gPad to None.
+                # No other technique I tried could do it.
+                pass
+
 
 @contextmanager
 def preserve_current_directory():
     """
-    Context manager which ensures that the current directory remains the current
-    directory when the context is left.
+    Context manager which ensures that the current directory remains the
+    current directory when the context is left.
     """
-    old = gDirectory()
+    old = ROOT.gDirectory.func()
     try:
         yield
     finally:
         assert old, "BUG: assumptions were invalid. Please report this"
         # old is always valid and refers to ROOT.TROOT if no file is created.
         old.cd()
+
 
 @contextmanager
 def preserve_batch_state():
@@ -75,6 +91,7 @@ def preserve_batch_state():
             yield
         finally:
             ROOT.gROOT.SetBatch(old)
+
 
 @contextmanager
 def invisible_canvas():
@@ -90,11 +107,9 @@ def invisible_canvas():
             return g.GetXaxis()
     """
     with preserve_current_canvas():
-
         with preserve_batch_state():
             ROOT.gROOT.SetBatch()
             c = ROOT.TCanvas()
-
         try:
             c.cd()
             yield c
@@ -102,11 +117,12 @@ def invisible_canvas():
             c.Close()
             c.IsA().Destructor(c)
 
+
 @contextmanager
 def thread_specific_tmprootdir():
     """
-    Context manager which makes a thread specific gDirectory to avoid interfering
-    with the current file.
+    Context manager which makes a thread specific gDirectory to avoid
+    interfering with the current file.
 
     Use cases:
 
@@ -118,7 +134,8 @@ def thread_specific_tmprootdir():
         TTree draw)
     """
     with preserve_current_directory():
-        dname = "rootpy-tmp/thread/{0}".format(threading.current_thread().ident)
+        dname = "rootpy-tmp/thread/{0}".format(
+                threading.current_thread().ident)
         d = ROOT.gROOT.mkdir(dname)
         if not d:
             d = ROOT.gROOT.GetDirectory(dname)
@@ -126,17 +143,27 @@ def thread_specific_tmprootdir():
         d.cd()
         yield d
 
+
 @contextmanager
 def set_directory(robject):
     """
     Context manager to temporarily set the directory of a ROOT object
+    (if possible)
     """
-    old_dir = robject.GetDirectory()
-    try:
-        robject.SetDirectory(gDirectory())
+    if (not hasattr(robject, 'GetDirectory') or
+        not hasattr(robject, 'SetDirectory')):
+        log.warning("Cannot set the directory of a `{0}`".format(
+            type(robject)))
+        # Do nothing
         yield
-    finally:
-        robject.SetDirectory(old_dir)
+    else:
+        old_dir = robject.GetDirectory()
+        try:
+            robject.SetDirectory(ROOT.gDirectory.func())
+            yield
+        finally:
+            robject.SetDirectory(old_dir)
+
 
 @contextmanager
 def preserve_set_th1_add_directory(state=True):
@@ -151,7 +178,24 @@ def preserve_set_th1_add_directory(state=True):
         finally:
             ROOT.TH1.AddDirectory(status)
 
-@contextmanager
-def do_nothing():
-    yield
 
+@contextmanager
+def working_directory(path):
+    """
+    A context manager that changes the working directory to the given
+    path, and then changes it back to its previous value on exit.
+    """
+    prev_cwd = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(prev_cwd)
+
+
+@contextmanager
+def do_nothing(*args, **kwargs):
+    """
+    A context manager that does... nothing!
+    """
+    yield

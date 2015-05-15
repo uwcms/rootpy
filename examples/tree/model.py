@@ -8,10 +8,9 @@ This example demonstrates how to define a tree model and collections of objects
 associated to sets of tree branches.
 """
 print __doc__
-from rootpy.tree import Tree, TreeModel
+from rootpy.tree import Tree, TreeModel, FloatCol, IntCol
 from rootpy.io import root_open
-from rootpy.types import FloatCol, IntCol
-from rootpy.math.physics.vector import LorentzVector
+from rootpy.vector import LorentzVector
 from rootpy import stl
 from random import gauss, randint
 
@@ -21,32 +20,27 @@ f = root_open("test.root", "recreate")
 
 # define the model
 class Event(TreeModel):
-
     # properties of particle "a"
     a_x = FloatCol()
     a_y = FloatCol()
     a_z = FloatCol()
-
     # properties of particle "b"
     b_x = FloatCol()
     b_y = FloatCol()
     b_z = FloatCol()
-
     # a collection of particles
     col_x = stl.vector("float")
     col_y = stl.vector("float")
     col_z = stl.vector("float")
     col_n = IntCol()
-
     # a TLorentzVector
     p = LorentzVector
-
     i = IntCol()
 
 tree = Tree("test", model=Event)
 
 # fill the tree
-for i in xrange(100):
+for i in xrange(10):
     tree.a_x = gauss(.5, 1.)
     tree.a_y = gauss(.3, 2.)
     tree.a_z = gauss(13., 42.)
@@ -85,7 +79,6 @@ tree.define_object(name='b', prefix='b_')
 class Particle(object):
 
     def who_is_your_daddy(self):
-
         print "You are!"
 
 # define collections of objects by prefix
@@ -96,11 +89,11 @@ tree.define_collection(name='particles',
 
 # loop over "events" in tree
 for event in tree:
-    print "a.x: %f" % event.a.x
-    print "b.y: %f" % event.b.y
+    print "a.x: {0:f}".format(event.a.x)
+    print "b.y: {0:f}".format(event.b.y)
     # loop over "particles" in current event
     for p in event.particles:
-        print "p.x: %f" % p.x
+        print "p.x: {0:f}".format(p.x)
         p.who_is_your_daddy()
     print event.p.Eta()
 

@@ -8,8 +8,6 @@ This example demonstrates how to use the TreeChain class, a more Python-friendly
 TChain replacement.
 """
 print __doc__
-import rootpy
-rootpy.log.basic_config_colorized()
 from random import gauss
 from rootpy.io import root_open
 from rootpy.tree import Tree, TreeChain
@@ -39,7 +37,7 @@ for i in xrange(10000):
 hist1 = Hist(100, -10, 10, name='hist1')
 tree.Draw('x', 'y > 1', hist=hist1)
 hist1.SetDirectory(0) # memory resident
-print "The first tree has %f entries where y > 1" % hist1.Integral()
+print "The first tree has {0:f} entries where y > 1".format(hist1.Integral())
 
 tree.write()
 f.close()
@@ -62,7 +60,7 @@ tree.write()
 hist2 = Hist(100, -10, 10, name='hist2')
 tree.Draw('x', 'y > 1', hist=hist2)
 hist2.SetDirectory(0) # memory resident
-print "The second tree has %f entries where y > 1" % hist2.Integral()
+print "The second tree has {0:f} entries where y > 1".format(hist2.Integral())
 f.close()
 
 combined_hist = hist1 + hist2
@@ -74,5 +72,7 @@ combined_hist_chain = Hist(100, -10, 10, name='combined')
 chain.Draw('x', 'y > 1', hist=combined_hist_chain)
 
 residual = combined_hist_chain - combined_hist
-print "The combined histogram (separately) minus the combined from the chain "\
-        "has %f entries" % residual.Integral()
+print (
+    "The combined histogram (separately) minus "
+    "the combined from the chain has {0:f} entries".format(
+        residual.Integral()))

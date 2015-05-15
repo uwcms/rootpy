@@ -1,77 +1,113 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
+from __future__ import absolute_import
+
 import ROOT
 
-from .. import QROOT
-from ..core import Object
-from .core import Plottable
+from .. import QROOT, asrootpy
+from ..base import Object
 from .hist import HistStack
+from .box import _Positionable
+from ..memory.keepalive import keepalive
+
+__all__ = [
+    'Legend',
+]
 
 
-class Legend(Object, QROOT.TLegend):
+class Legend(_Positionable, Object, QROOT.TLegend):
+    _ROOT = QROOT.TLegend
 
-    def __init__(self, nentries,
-                       pad=None,
-                       leftmargin=0.5,
-                       topmargin=0.05,
-                       rightmargin=0.05,
-                       entryheight=0.06):
-
-        height = entryheight * nentries
+    def __init__(self, entries,
+                 pad=None,
+                 leftmargin=0.5,
+                 topmargin=0.05,
+                 rightmargin=0.05,
+                 entryheight=0.06,
+                 entrysep=0.02,
+                 margin=0.3,
+                 textfont=None,
+                 textsize=None,
+                 header=None):
         if pad is None:
-            pad = ROOT.gPad
-        ROOT.TLegend.__init__(self,
-                pad.GetLeftMargin() + leftmargin,
-                (1. - pad.GetTopMargin() - topmargin) - height,
-                1. - pad.GetRightMargin() - rightmargin,
-                ((1. - pad.GetTopMargin()) - topmargin))
-        self.pad = pad
-        self.UseCurrentStyle()
-        self.SetEntrySeparation(0.2)
-        self.SetMargin(0.1)
+            pad = ROOT.gPad.func()
+        if not pad:
+            raise RuntimeError("create a pad before a legend")
+
+        entries_is_list = False
+        if isinstance(entries, (int, long)):
+            # entries is the expected number of entries that will be included
+            # in the legend
+            nentries = entries
+        else:
+            # entries is a list of objects to become entries in the legend
+            entries_is_list = True
+            nentries = len(entries)
+
+        if header is not None:
+            nentries += 1
+        height = (entryheight + entrysep) * nentries - entrysep
+
+        super(Legend, self).__init__(
+            pad.GetLeftMargin() + leftmargin,
+            (1. - pad.GetTopMargin() - topmargin) - height,
+            1. - pad.GetRightMargin() - rightmargin,
+            ((1. - pad.GetTopMargin()) - topmargin))
+
+        self.SetEntrySeparation(entrysep)
+        self.SetMargin(margin)
+        if header is not None:
+            self.SetHeader(header)
+
+        # ROOT, why are you filling my legend with a
+        # grey background by default?
         self.SetFillStyle(0)
         self.SetFillColor(0)
-        self.SetTextFont(ROOT.gStyle.GetTextFont())
-        self.SetTextSize(ROOT.gStyle.GetTextSize())
+
+        if textfont is None:
+            textfont = ROOT.gStyle.GetLegendFont()
+        if textsize is None:
+            textsize = ROOT.gStyle.GetTextSize()
+
+        self.SetTextFont(textfont)
+        self.SetTextSize(textsize)
+
+        if entries_is_list:
+            for thing in entries:
+                self.AddEntry(thing)
 
     def Height(self):
-
         return abs(self.GetY2() - self.GetY1())
 
     def Width(self):
-
         return abs(self.GetX2() - self.GetX1())
 
     def Draw(self, *args, **kwargs):
-
-        ROOT.TLegend.Draw(self, *args, **kwargs)
         self.UseCurrentStyle()
-        self.pad.Modified()
-        self.pad.Update()
+        super(Legend, self).Draw(*args, **kwargs)
 
-    def AddEntry(self, thing, legendstyle=None, label=None):
+    def AddEntry(self, thing, label=None, style=None):
         """
         Add an entry to the legend.
 
-        If legendstyle is None, it will be taken from thing's
-        'legendstyle' attribute.
+        If `label` is None, `thing.GetTitle()` will be used as the label.
 
-        If label is None, the thing's title will be used as the label.
+        If `style` is None, `thing.legendstyle` is used if present,
+        otherwise `P`.
         """
-
         if isinstance(thing, HistStack):
             things = thing
-        elif isinstance(thing, Plottable):
-            things = [thing]
         else:
-            raise TypeError("Can't add object of type %s to legend" %
-                            type(thing))
-        for hist in things:
-            if hist.inlegend:
+            things = [thing]
+        for thing in things:
+            if getattr(thing, 'inlegend', True):
                 if label is None:
-                    label = hist.GetTitle()
-                if legendstyle is None:
-                    legendstyle = hist.legendstyle
-                ROOT.TLegend.AddEntry(self, hist, label, legendstyle)
-        self.pad.Modified()
-        self.pad.Update()
+                    label = thing.GetTitle()
+                if style is None:
+                    style = getattr(thing, 'legendstyle', 'P')
+                super(Legend, self).AddEntry(thing, label, style)
+                keepalive(self, thing)
+
+    @property
+    def primitives(self):
+        return asrootpy(self.GetListOfPrimitives())

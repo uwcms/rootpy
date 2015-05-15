@@ -19,8 +19,10 @@ Summary of views:
 - StackView: build THStacks using histograms from different folders
 - TitleView: change the title of histograms
 - FunctorView: apply a arbitrary transformation function to the histograms
-- MultiFunctorView: apply a arbitrary transformation function to a collection of histograms
-- SubdirectoryView: A view of a subdirectory, which maintains the same view as the base.
+- MultiFunctorView: apply a arbitrary transformation function to a collection
+  of histograms
+- SubdirectoryView: A view of a subdirectory, which maintains the same view as
+  the base.
 
 Example use case
 ================
@@ -171,8 +173,9 @@ True
 FunctorView
 -----------
 
-FunctorView allows you to apply an arbitrary transformation to the object.  Here
-we show how you can change the axis range for all histograms in a directory.
+FunctorView allows you to apply an arbitrary transformation to the object.
+Here we show how you can change the axis range for all histograms in a
+directory.
 
 >>> rebin = lambda x: x.Rebin(2)
 >>> zjets_rebinned = FunctorView(zjets, rebin)
@@ -248,12 +251,27 @@ True
 False
 
 '''
+from __future__ import absolute_import
 
 import os
 import ROOT
-from .core import Plottable
+
+from .base import Plottable
 from .hist import HistStack
 from ..io import Directory, DoesNotExist
+
+__all__ = [
+    'ScaleView',
+    'NormalizeView',
+    'StyleView',
+    'TitleView',
+    'SumView',
+    'StackView',
+    'FunctorView',
+    'MultiFunctorView',
+    'PathModifierView',
+    'SubdirectoryView',
+]
 
 
 class _FolderView(object):
@@ -263,14 +281,13 @@ class _FolderView(object):
     Provides one interface: Get(path) which returns a modified version
     of whatever exists at path.  Subclasses should define::
 
-        apply_view(object)
+        apply_view(self, obj)
 
     which should return the modified [object] as necessary.
 
     The subclass can get access to the queried path via the self.getting
     variable.
     '''
-
     def __init__(self, directory):
         ''' Initialize with the directory to be wrapped '''
         self.dir = directory
@@ -287,17 +304,18 @@ class _FolderView(object):
             return str(self.dir)
 
     def __str__(self):
-        return "%s('%s')" % (self.__class__.__name__, self.path())
+        return "{0}('{1}')".format(self.__class__.__name__, self.path())
 
     def Get(self, path):
         ''' Get the (modified) object from path '''
         self.getting = path
         try:
-            object = self.dir.Get(path)
-            return self.apply_view(object)
+            obj = self.dir.Get(path)
+            return self.apply_view(obj)
         except DoesNotExist as dne:
             #print dir(dne)
-            raise DoesNotExist(str(dne) + "[%s]" % self.__class__.__name__)
+            raise DoesNotExist(
+                str(dne) + "[{0}]".format(self.__class__.__name__))
 
 
 class _MultiFolderView(object):
@@ -307,7 +325,7 @@ class _MultiFolderView(object):
     Applies some type of "merge" operation to the result of the get from each
     folder.  Subclasses should define::
 
-        merge_views(objects)
+        merge_views(self, objects)
 
     which takes a *generator* of objects returns a merged object.
 
@@ -318,8 +336,9 @@ class _MultiFolderView(object):
         self.dirs = directories
 
     def __str__(self):
-        return "%s(%s)" % (self.__class__.__name__,
-                           ','.join(str(x) for x in self.dirs))
+        return "{0}({1})".format(
+            self.__class__.__name__,
+            ','.join(str(x) for x in self.dirs))
 
     def Get(self, path):
         ''' Merge the objects at path in all subdirectories '''
@@ -332,12 +351,13 @@ class ScaleView(_FolderView):
         super(ScaleView, self).__init__(directory)
         self.factor = scale_factor
 
-    def apply_view(self, object):
-        if not hasattr(object, 'Scale'):
+    def apply_view(self, obj):
+        if not hasattr(obj, 'Scale'):
             raise ValueError(
-                "ScaleView can't figure out how to deal"
-                " with the object %s, it has no Scale method" % object)
-        clone = object.Clone()
+                "`ScaleView` can't determine how to handle"
+                "an object of type `{0}`; "
+                "it has no `Scale` method".format(type(obj)))
+        clone = obj.Clone()
         clone.Scale(self.factor)
         return clone
 
@@ -350,14 +370,14 @@ class NormalizeView(ScaleView):
         super(NormalizeView, self).__init__(directory, None)
         self.norm = normalization
 
-    def apply_view(self, object):
-        current_norm = object.Integral()
+    def apply_view(self, obj):
+        current_norm = obj.Integral()
         # Update the scale factor (in the base)
         if current_norm > 0:
             self.factor = self.norm / current_norm
         else:
             self.factor = 0
-        return super(NormalizeView, self).apply_view(object)
+        return super(NormalizeView, self).apply_view(obj)
 
 
 class StyleView(_FolderView):
@@ -370,12 +390,13 @@ class StyleView(_FolderView):
         super(StyleView, self).__init__(directory)
         self.kwargs = kwargs
 
-    def apply_view(self, object):
-        if not isinstance(object, Plottable):
+    def apply_view(self, obj):
+        if not isinstance(obj, Plottable):
             raise TypeError(
-                "ScaleView can't figure out how to deal"
-                " with the object %s, it is not a Plottable subclass" % object)
-        clone = object.Clone()
+                "`ScaleView` can't determine how to handle "
+                "an object of type `{0}`; it is not a subclass of "
+                "`Plottable`".format(type(obj)))
+        clone = obj.Clone()
         clone.decorate(**self.kwargs)
         return clone
 
@@ -386,8 +407,8 @@ class TitleView(_FolderView):
         self.title = title
         super(TitleView, self).__init__(directory)
 
-    def apply_view(self, object):
-        clone = object.Clone()
+    def apply_view(self, obj):
+        clone = obj.Clone()
         clone.SetTitle(self.title)
         return clone
 
@@ -399,11 +420,11 @@ class SumView(_MultiFolderView):
 
     def merge_views(self, objects):
         output = None
-        for object in objects:
+        for obj in objects:
             if output is None:
-                output = object.Clone()
+                output = obj.Clone()
             else:
-                output += object
+                output += obj
         return output
 
 
@@ -418,8 +439,8 @@ class StackView(_MultiFolderView):
     corresponding to the input directories. In this case the option for
     all histograms must be specified.
 
-    The name and title of the HistStack is taken from the first histogram in the
-    list.
+    The name and title of the HistStack is taken from the first histogram in
+    the list.
 
     Normally the histograms will be added to the stack in the order
     of the constructor.  Optionally, one can add them in order of ascending
@@ -433,10 +454,11 @@ class StackView(_MultiFolderView):
         output = None
         if self.sort:
             objects = sorted(objects, key=lambda x: x.Integral())
-        for object in objects:
+        for obj in objects:
             if output is None:
-                output = HistStack(object.GetName(), object.GetTitle())
-            output.Add(object)
+                output = HistStack(name=obj.GetName(),
+                                   title=obj.GetTitle())
+            output.Add(obj)
         return output
 
 
@@ -450,8 +472,8 @@ class FunctorView(_FolderView):
         self.f = function
         super(FunctorView, self).__init__(directory)
 
-    def apply_view(self, object):
-        clone = object.Clone()
+    def apply_view(self, obj):
+        clone = obj.Clone()
         return self.f(clone)
 
 
@@ -484,9 +506,9 @@ class PathModifierView(_FolderView):
         newpath = self.path_modifier(path)
         return super(PathModifierView, self).Get(newpath)
 
-    def apply_view(self, object):
+    def apply_view(self, obj):
         ''' Do nothing '''
-        return object
+        return obj
 
 
 class SubdirectoryView(PathModifierView):
@@ -495,7 +517,6 @@ class SubdirectoryView(PathModifierView):
 
     <subdir> is the directory you want to 'cd' too.
     '''
-
     def __init__(self, dir, subdirpath):
         functor = lambda path: os.path.join(subdirpath, path)
         super(SubdirectoryView, self).__init__(dir, functor)

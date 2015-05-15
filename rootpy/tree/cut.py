@@ -1,19 +1,22 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
+from __future__ import absolute_import
+
 import re
 
 import ROOT
 
 from .. import log; log = log[__name__]
 from .. import QROOT
-from ..util import path
+from ..utils import path
 
 
-__all__ = ['Cut']
+__all__ = [
+    'Cut',
+]
 
 
 def cutop(func):
-
     def foo(self, other):
         other = Cut.convert(other)
         if not self:
@@ -25,7 +28,6 @@ def cutop(func):
 
 
 def icutop(func):
-
     def foo(self, other):
         other = Cut.convert(other)
         if not self:
@@ -38,30 +40,29 @@ def icutop(func):
 
 
 def _expand_ternary(match):
-
-    return '(%s%s)&&(%s%s)' % \
-           (match.group('left'),
-            match.group('name'),
-            match.group('name'),
-            match.group('right'))
+    return '({0}{1})&&({1}{2})'.format(
+        match.group('left'),
+        match.group('name'),
+        match.group('right'))
 
 
 _TERNARY = re.compile(
-        '(?P<left>[a-zA-Z0-9_\.]+[<>=]+)'
-        '(?P<name>\w+)'
-        '(?P<right>[<>=]+[a-zA-Z0-9_\.]+)')
+    '(?P<left>[a-zA-Z0-9_\.]+[<>=]+)'
+    '(?P<name>\w+)'
+    '(?P<right>[<>=]+[a-zA-Z0-9_\.]+)')
 
 
 class Cut(QROOT.TCut):
     """
     Inherits from ROOT.TCut and implements logical operators
     """
-    def __init__(self, cut='', from_file=False):
+    _ROOT = QROOT.TCut
 
+    def __init__(self, cut='', from_file=False):
         if cut != '':
             if cut is None:
                 cut = ''
-            elif type(cut) is file:
+            elif isinstance(cut, file):
                 cut = ''.join(line.strip() for line in cut.readlines())
             elif isinstance(cut, basestring) and from_file:
                 ifile = open(path.expand(cut))
@@ -73,11 +74,10 @@ class Cut(QROOT.TCut):
             cut = cut.replace(' ', '')
             # expand ternary operations (i.e. 3<A<8)
             cut = re.sub(_TERNARY, _expand_ternary, cut)
-        ROOT.TCut.__init__(self, cut)
+        super(Cut, self).__init__(cut)
 
     @staticmethod
     def convert(thing):
-
         if isinstance(thing, Cut):
             return thing
         elif isinstance(thing, basestring):
@@ -88,22 +88,18 @@ class Cut(QROOT.TCut):
 
     @property
     def str(self):
-
         return self.GetTitle()
 
     @str.setter
     def str(self, content):
-
         self.SetTitle(str(content))
 
     def __mod__(self, other):
-
         if isinstance(other, Cut):
             other = str(other)
         return Cut(str(self) % other)
 
     def __imod__(self, other):
-
         if isinstance(other, Cut):
             other = str(other)
         self.SetTitle(str(self) % other)
@@ -114,11 +110,10 @@ class Cut(QROOT.TCut):
         """
         Return a new cut which is the logical AND of this cut and another
         """
-        return Cut("(%s)&&(%s)" % (self, other))
+        return Cut('({0!s})&&({1!s})'.format(self, other))
 
     @cutop
     def __rand__(self, other):
-
         return self & other
 
     @cutop
@@ -126,11 +121,10 @@ class Cut(QROOT.TCut):
         """
         Return a new cut which is the product of this cut and another
         """
-        return Cut("(%s)*(%s)" % (self, other))
+        return Cut('({0!s})*({1!s})'.format(self, other))
 
     @cutop
     def __rmul__(self, other):
-
         return self * other
 
     @icutop
@@ -138,7 +132,7 @@ class Cut(QROOT.TCut):
         """
         Multiply other cut with self and return self
         """
-        self.SetTitle("(%s)*(%s)" % (self, other))
+        self.SetTitle('({0!s})*({1!s})'.format(self, other))
         return self
 
     @cutop
@@ -146,11 +140,10 @@ class Cut(QROOT.TCut):
         """
         Return a new cut which is the logical OR of this cut and another
         """
-        return Cut("(%s)||(%s)" % (self, other))
+        return Cut('({0!s})||({1!s})'.format(self, other))
 
     @cutop
     def __ror__(self, other):
-
         return self | other
 
     @cutop
@@ -158,11 +151,10 @@ class Cut(QROOT.TCut):
         """
         Return a new cut which is the sum of this cut and another
         """
-        return Cut("(%s)+(%s)" % (self, other))
+        return Cut('({0!s})+({1!s})'.format(self, other))
 
     @cutop
     def __radd__(self, other):
-
         return self + other
 
     @icutop
@@ -170,7 +162,7 @@ class Cut(QROOT.TCut):
         """
         Add other cut to self and return self
         """
-        self.SetTitle("(%s)+(%s)" % (self, other))
+        self.SetTitle('({0!s})+({1!s})'.format(self, other))
         return self
 
     @cutop
@@ -178,11 +170,10 @@ class Cut(QROOT.TCut):
         """
         Return a new cut which is the difference of this cut and another
         """
-        return Cut("(%s)-(%s)" % (self, other))
+        return Cut('({0!s})-({1!s})'.format(self, other))
 
     @cutop
     def __rsub__(self, other):
-
         return self - other
 
     @icutop
@@ -190,7 +181,7 @@ class Cut(QROOT.TCut):
         """
         Subtract other cut to self and return self
         """
-        self.SetTitle("(%s)-(%s)" % (self, other))
+        self.SetTitle('({0!s})-({1!s})'.format(self, other))
         return self
 
     def __neg__(self):
@@ -199,19 +190,16 @@ class Cut(QROOT.TCut):
         """
         if not self:
             return Cut()
-        return Cut("!(%s)" % self)
+        return Cut('!({0!s})'.format(self))
 
     def __pos__(self):
-
         return Cut(self)
 
     def __str__(self):
-
         return self.GetTitle()
 
     def __repr__(self):
-
-        return "'%s'" % self.__str__()
+        return "'{0!s}'".format(self)
 
     def __nonzero__(self):
         """
@@ -222,24 +210,27 @@ class Cut(QROOT.TCut):
         return str(self) != ''
 
     def __contains__(self, other):
-
         return str(other) in str(self)
 
     def safe(self, parentheses=True):
         """
         Returns a string representation with special characters
-        replaced by safer characters for use in filenames for example.
+        replaced by safer characters for use in file names.
         """
         if not self:
             return ""
         string = str(self)
-        string = string.replace("==", "-eq-")
-        string = string.replace("<=", "-leq-")
-        string = string.replace(">=", "-geq-")
-        string = string.replace("<", "-lt-")
-        string = string.replace(">", "-gt-")
-        string = string.replace("&&", "-and-")
-        string = string.replace("||", "-or-")
+        string = string.replace("**", "_pow_")
+        string = string.replace("*", "_mul_")
+        string = string.replace("/", "_div_")
+        string = string.replace("==", "_eq_")
+        string = string.replace("<=", "_leq_")
+        string = string.replace(">=", "_geq_")
+        string = string.replace("<", "_lt_")
+        string = string.replace(">", "_gt_")
+        string = string.replace("&&", "_and_")
+        string = string.replace("||", "_or_")
+        string = string.replace("!", "not_")
         if parentheses:
             string = string.replace("(", "L")
             string = string.replace(")", "R")
@@ -268,11 +259,9 @@ class Cut(QROOT.TCut):
         Return string compatible with PyTable's Table.where syntax:
         http://pytables.github.com/usersguide/libref.html#tables.Table.where
         """
-        string = str(self)
-        string = string.replace('&&', '&')
-        string = string.replace('||', '|')
-        string = string.replace('!', '~')
-        return string
+        return re.sub(
+            '!(?!=)', '~',
+            str(self).replace('&&', '&').replace('||', '|'))
 
     def replace(self, name, newname):
         """
@@ -284,7 +273,6 @@ class Cut(QROOT.TCut):
             return None
 
         def _replace(match):
-
             return match.group(0).replace(match.group('name'), newname)
 
         pattern = re.compile("(\W|^)(?P<name>" + name + ")(\W|$)")

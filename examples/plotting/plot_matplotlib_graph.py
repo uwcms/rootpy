@@ -10,9 +10,7 @@ attributes and displayed via ROOT or matplotlib.
 print __doc__
 import ROOT
 import numpy as np
-import rootpy
-rootpy.log.basic_config_colorized()
-from rootpy.plotting import Hist, HistStack, Legend, Canvas
+from rootpy.plotting import Canvas, Graph
 from rootpy.plotting.style import get_style, set_style
 from rootpy.interactive import wait
 import rootpy.plotting.root2matplotlib as rplt
@@ -31,17 +29,17 @@ y = np.random.random(10)
 set_style('ATLAS')
 
 # create graph
-graph = ROOT.TGraph()
+graph = Graph(x.shape[0])
 for i, (xx, yy) in enumerate(zip(x, y)):
     graph.SetPoint(i, xx, yy)
 
 # set visual attributes
-graph.SetLineColor(ROOT.kBlue)
-graph.SetMarkerColor(ROOT.kBlue)
-graph.GetXaxis().SetTitle("E_{T} [GeV]")
-graph.GetYaxis().SetTitle("d#sigma_{jet}/dE_{T,jet} [fb/GeV]")
-graph.GetXaxis().SetRangeUser(0, 3500)
-graph.GetYaxis().SetRangeUser(0, 1)
+graph.linecolor = 'blue'
+graph.markercolor = 'blue'
+graph.xaxis.SetTitle("E_{T} [GeV]")
+graph.yaxis.SetTitle("d#sigma_{jet}/dE_{T,jet} [fb/GeV]")
+graph.xaxis.SetRangeUser(0, 3500)
+graph.yaxis.SetRangeUser(0, 1)
 
 # plot with ROOT
 canvas = Canvas()
@@ -61,8 +59,10 @@ def plot_with_matplotlib():
     fig, axes = plt.subplots()
 
     axes.plot(x, y, 'o-', markeredgewidth=0)
-    axes.set_xlabel(r"$E_T$ [GeV]", horizontalalignment="right", x=1, labelpad=20)
-    axes.set_ylabel(r"$d\sigma_{jet}/dE_{T,jet}$ [fb/GeV]", verticalalignment="top", y=1, labelpad=32)
+    axes.set_xlabel(r"$E_T$ [GeV]",
+                    horizontalalignment="right", x=1, labelpad=20)
+    axes.set_ylabel(r"$d\sigma_{jet}/dE_{T,jet}$ [fb/GeV]",
+                    horizontalalignment="right", y=1, labelpad=32)
     axes.set_xlim(0, 3500)
     axes.set_ylim(0, 1)
 

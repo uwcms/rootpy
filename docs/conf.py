@@ -47,7 +47,12 @@ extensions = [
     #'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'ipython_console_highlighting',
-    'numpydoc']
+    'numpydoc',
+    #'sphinxcontrib.ansi',
+    'sphinxcontrib.programoutput',
+    ]
+
+#programoutput_use_ansi = True
 
 # Suppress numpydoc warnings as suggested here:
 # https://github.com/phn/pytpm/issues/3
@@ -136,7 +141,8 @@ html_theme = 'readthedocs'
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.
 html_theme_options = {
-    'show_rtd': False,
+    'custom_css': 'rootpy.css',
+    'show_sphinx': False,
     'analytics_code': 'UA-39364267-1',
 }
 
@@ -152,7 +158,7 @@ html_theme_path = ['themes']
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+html_logo = '_static/rootpy-logo-80dpi.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -332,9 +338,7 @@ intersphinx_mapping = {
     'matplotlib' : ('http://matplotlib.sourceforge.net/', None),
     }
 
-
-# Taken from http://read-the-docs.readthedocs.org/en/latest/faq.html
-                      #i-get-import-errors-on-libraries-that-depend-on-c-modules
+# Taken from http://read-the-docs.readthedocs.org/en/latest/faq.html#i-get-import-errors-on-libraries-that-depend-on-c-modules
 
 from itertools import product
 hists = ["TH{0}{1}".format(a, b) for a, b, in product((1, 2, 3), "CSIFD")]
@@ -398,3 +402,11 @@ if ON_RTD:
     MOCK_MODULES = 'numpy numpy.lib numpy.core.multiarray numpy.ma matplotlib.cbook tables'.split()
     for mod_name in MOCK_MODULES:
         sys.modules[mod_name] = Mock()
+else:
+    import ROOT
+
+    def skip_ROOT_member(app, what, name, obj, skip, options):
+        return skip or isinstance(obj, ROOT.MethodProxy)
+
+    def setup(app):
+        app.connect('autodoc-skip-member', skip_ROOT_member)

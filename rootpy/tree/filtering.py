@@ -1,13 +1,23 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
-from ..extern.tabulartext import PrettyTable
-from . import log; log = log[__name__]
-
-
 """
 This module defines a framework for filtering Trees.
 The user must write a class which inherits from Filter and
 """
+from __future__ import absolute_import
+
+from ..extern.tabulartext import PrettyTable
+from . import log; log = log[__name__]
+
+__all__ = [
+    'Filter',
+    'FilterHook',
+    'EventFilter',
+    'ObjectFilter',
+    'FilterList',
+    'EventFilterList',
+    'ObjectFilterList',
+]
 
 
 class Filter(object):
@@ -19,11 +29,10 @@ class Filter(object):
     later to create a cut-flow.
     """
     def __init__(self,
-            hooks=None,
-            passthrough=False,
-            name=None,
-            count_funcs=None):
-
+                 hooks=None,
+                 passthrough=False,
+                 name=None,
+                 count_funcs=None):
         self.total = 0
         self.passing = 0
         self.count_funcs_total = {}
@@ -48,29 +57,29 @@ class Filter(object):
         self.passthrough = passthrough
         self.was_passed = False
         if self.passthrough:
-            log.info("Filter %s will run in pass-through mode" %
-                     self.__class__.__name__)
+            log.info(
+                "Filter {0} will run in pass-through mode".format(
+                    self.__class__.__name__))
         else:
-            log.info("Filter %s is activated" %
-                     self.__class__.__name__)
+            log.info(
+                "Filter {0} is activated".format(
+                    self.__class__.__name__))
 
     def __str__(self):
-
         return self.__repr__()
 
     def __getstate__(self):
-
-        return {"name": self.name,
-                "total": self.total,
-                "passing": self.passing,
-                "details": self.details,
-                "count_funcs": dict([
-                    (name, None) for name in self.count_funcs.keys()]),
-                "count_funcs_total": self.count_funcs_total,
-                "count_funcs_passing": self.count_funcs_passing}
+        return {
+            "name": self.name,
+            "total": self.total,
+            "passing": self.passing,
+            "details": self.details,
+            "count_funcs": dict([
+                (name, None) for name in self.count_funcs.keys()]),
+            "count_funcs_total": self.count_funcs_total,
+            "count_funcs_passing": self.count_funcs_passing}
 
     def __setstate__(self, state):
-
         self.name = state['name']
         self.total = state['total']
         self.passing = state['passing']
@@ -80,14 +89,15 @@ class Filter(object):
         self.count_funcs_passing = state['count_funcs_passing']
 
     def __repr__(self):
-
-        return "Filter %s\n" % (self.name) + \
-               "Total: %i\n" % (self.total) + \
-               "Pass:  %i" % (self.passing)
+        return ("Filter {0}\n"
+                "Total: {1:d}\n"
+                "Pass:  {2:d}").format(
+                    self.name,
+                    self.total,
+                    self.passing)
 
     @classmethod
     def add(cls, left, right):
-
         if left.name != right.name:
             raise ValueError("Attemping to add filters with different names")
         newfilter = Filter()
@@ -100,60 +110,51 @@ class Filter(object):
         # sum count_funcs
         for func_name in left.count_funcs.keys():
             if func_name not in right.count_funcs:
-                raise ValueError('%s count is not defined for both filters' %
-                        func_name)
+                raise ValueError(
+                    "{0} count is not defined "
+                    "for both filters".format(func_name))
             newfilter.count_funcs[func_name] = left.count_funcs[func_name]
             newfilter.count_funcs_total[func_name] = (
-                    left.count_funcs_total[func_name] +
-                    right.count_funcs_total[func_name])
+                left.count_funcs_total[func_name] +
+                right.count_funcs_total[func_name])
             newfilter.count_funcs_passing[func_name] = (
-                    left.count_funcs_passing[func_name] +
-                    right.count_funcs_passing[func_name])
+                left.count_funcs_passing[func_name] +
+                right.count_funcs_passing[func_name])
         return newfilter
 
     def __add__(self, other):
-
         return Filter.add(self, other)
 
     def passed(self, event):
-
         self.total += 1
         self.passing += 1
-
         for name, func in self.count_funcs.iteritems():
             count = func(event)
             self.count_funcs_total[name] += count
             self.count_funcs_passing[name] += count
-
         self.was_passed = True
 
     def failed(self, event):
-
         self.total += 1
-
         for name, func in self.count_funcs.iteritems():
             count = func(event)
             self.count_funcs_total[name] += count
-
         self.was_passed = False
 
 
 class FilterHook(object):
 
     def __init__(self, target, args):
-
         self.target = target
         self.args = args
 
     def __call__(self):
-
         self.target(*self.args)
 
 
 class EventFilter(Filter):
 
     def __call__(self, event):
-
         if self.passthrough:
             if self.hooks:
                 for hook in self.hooks:
@@ -164,9 +165,9 @@ class EventFilter(Filter):
         if _passes is None:
             # event is not counted in total
             log.warning(
-                "Filter %s returned None so event will not "
+                "Filter {0} returned None so event will not "
                 "contribute to cut-flow. Use True to accept event, "
-                "otherwise False." % self.__class__.__name__)
+                "otherwise False.".format(self.__class__.__name__))
             return False
         elif _passes:
             if self.hooks:
@@ -193,12 +194,10 @@ class EventFilter(Filter):
 class ObjectFilter(Filter):
 
     def __init__(self, count_events=False, **kwargs):
-
         self.count_events = count_events
         super(ObjectFilter, self).__init__(**kwargs)
 
     def __call__(self, event, collection):
-
         self.was_passed = False
         if self.count_events:
             self.total += 1
@@ -223,22 +222,22 @@ class ObjectFilter(Filter):
 
 class FilterList(list):
     """
-    Creates a list of Filters for convenient evaluation of a sequence of Filters.
+    Creates a list of Filters for convenient evaluation of a
+    sequence of Filters.
     """
     @classmethod
     def merge(cls, list1, list2):
-
         if not isinstance(list1, list):
             raise TypeError("list1 must be a FilterList or list")
         if not isinstance(list2, list):
             raise TypeError("list2 must be a FilterList or list")
         filterlist = FilterList()
         for f1, f2 in zip(list1, list2):
-            if type(f1) is dict:
+            if isinstance(f1, dict):
                 _f1 = Filter()
                 _f1.__setstate__(f1)
                 f1 = _f1
-            if type(f2) is dict:
+            if isinstance(f2, dict):
                 _f2 = Filter()
                 _f2.__setstate__(f2)
                 f2 = _f2
@@ -247,14 +246,12 @@ class FilterList(list):
 
     @property
     def total(self):
-
         if len(self) > 0:
             return self[0].total
         return 0
 
     @property
     def passing(self):
-
         if len(self) > 0:
             return self[-1].passing
         return 0
@@ -267,27 +264,23 @@ class FilterList(list):
         return [filter.__getstate__() for filter in self]
 
     def __setitem__(self, filter):
-
         if not isinstance(filter, (Filter, dict)):
             raise TypeError(
-                    "FilterList can only hold objects "
-                    "inheriting from Filter or dict")
+                "FilterList can only hold objects "
+                "inheriting from Filter or dict")
         super(FilterList, self).__setitem__(filter)
 
     def append(self, filter):
-
         if not isinstance(filter, (Filter, dict)):
             raise TypeError(
-                    "FilterList can only hold objects "
-                    "inheriting from Filter or dict")
+                "FilterList can only hold objects "
+                "inheriting from Filter or dict")
         super(FilterList, self).append(filter)
 
     def __str__(self):
-
         return self.__repr__()
 
     def __repr__(self):
-
         if len(self) > 0:
             table = PrettyTable(["Filter", "Pass"])
             table.align["Filter"] = "l"
@@ -296,12 +289,11 @@ class FilterList(list):
             for filter in self:
                 table.add_row([filter.name, filter.passing])
             _str = str(table)
-
             # print count_funcs
             # assume same count_funcs in all filters
             # TODO: support possibly different/missing/extra count_funcs
             for func_name in self[0].count_funcs.keys():
-                _str += "\n%s counts\n" % func_name
+                _str += "\n{0} counts\n".format(func_name)
                 table = PrettyTable(["Filter", "Pass"])
                 table.align["Filter"] = "l"
                 table.align["Pass"] = "l"
@@ -311,10 +303,9 @@ class FilterList(list):
                         filter.name,
                         filter.count_funcs_passing[func_name]])
                 _str += str(table)
-
             for filter in self:
                 if filter.details:
-                    _str += "\n%s Details\n" % filter.name
+                    _str += "\n{0} Details\n".format(filter.name)
                     details_table = PrettyTable(["Detail", "Value"])
                     for key, value in filter.details.items():
                         details_table.add_row([key, value])
@@ -326,30 +317,26 @@ class FilterList(list):
 class EventFilterList(FilterList):
 
     def __call__(self, event):
-
         for filter in self:
             if not filter(event):
                 return False
         return True
 
     def __setitem__(self, filter):
-
         if not isinstance(filter, EventFilter):
             raise TypeError(
-                    "EventFilterList can only hold objects "
-                    "inheriting from EventFilter")
+                "EventFilterList can only hold objects "
+                "inheriting from EventFilter")
         super(EventFilterList, self).__setitem__(filter)
 
     def append(self, filter):
-
         if not isinstance(filter, EventFilter):
             raise TypeError(
-                    "EventFilterList can only hold objects "
-                    "inheriting from EventFilter")
+                "EventFilterList can only hold objects "
+                "inheriting from EventFilter")
         super(EventFilterList, self).append(filter)
 
     def finalize(self):
-
         for filter in self:
             filter.finalize()
 
@@ -357,7 +344,6 @@ class EventFilterList(FilterList):
 class ObjectFilterList(FilterList):
 
     def __call__(self, event, collection):
-
         passing_objects = collection
         for filter in self:
             passing_objects = filter(event, passing_objects)
@@ -366,17 +352,15 @@ class ObjectFilterList(FilterList):
         return passing_objects
 
     def __setitem__(self, filter):
-
         if not isinstance(filter, ObjectFilter):
             raise TypeError(
-                    "ObjectFilterList can only hold objects "
-                    "inheriting from ObjectFilter")
+                "ObjectFilterList can only hold objects "
+                "inheriting from ObjectFilter")
         super(ObjectFilterList, self).__setitem__(filter)
 
     def append(self, filter):
-
         if not isinstance(filter, ObjectFilter):
             raise TypeError(
-                    "ObjectFilterList can only hold objects "
-                    "inheriting from ObjectFilter")
+                "ObjectFilterList can only hold objects "
+                "inheriting from ObjectFilter")
         super(ObjectFilterList, self).append(filter)

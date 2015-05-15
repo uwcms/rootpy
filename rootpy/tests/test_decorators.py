@@ -1,11 +1,12 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
-import ROOT
+from rootpy import ROOT
+from rootpy.base import Object
 from rootpy.decorators import (method_file_check, method_file_cd,
                                snake_case_methods)
 from rootpy.io import TemporaryFile
 import rootpy
-from nose.tools import assert_true, raises
+from nose.tools import assert_equal, assert_true, raises
 
 
 def test_snake_case_methods():
@@ -21,6 +22,7 @@ def test_snake_case_methods():
 
     @snake_case_methods
     class B(A):
+        _ROOT = A
         def write(self): pass
 
     assert_true(hasattr(B, 'some_method'))
@@ -30,16 +32,45 @@ def test_snake_case_methods():
     assert_true(hasattr(B, 'other_method'))
 
 
-class Foo(ROOT.TH1D):
+def test_snake_case_methods_descriptor():
+
+    def f(_): pass
+
+    class A(object):
+        Prop = property(f)
+        Sm = staticmethod(f)
+        Cm = classmethod(f)
+        M = f
+
+    class B(A):
+        cm = A.__dict__["Cm"]
+        m = A.__dict__["M"]
+        prop = A.__dict__["Prop"]
+        sm = A.__dict__["Sm"]
+
+    @snake_case_methods
+    class snakeB(A):
+        _ROOT = A
+
+    # Ensure that no accidental descriptor dereferences happened inside
+    # `snake_case_methods`. This is checked by making sure that the types
+    # are the same between B and snakeB.
+
+    for member in dir(snakeB):
+        if member.startswith("_"): continue
+        assert_equal(type(getattr(B, member)), type(getattr(snakeB, member)))
+
+
+class Foo(Object, ROOT.R.TH1D):
 
     @method_file_check
     def something(self, foo):
-        self.file = rootpy.gDirectory()
+        self.file = ROOT.gDirectory.func()
         return foo
 
     @method_file_cd
     def write(self):
-        assert_true(self.GetDirectory() == rootpy.gDirectory())
+        assert_true(self.GetDirectory() == ROOT.gDirectory.func())
 
 
 def test_method_file_check_good():

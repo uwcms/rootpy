@@ -7,22 +7,36 @@ Setting the plotting style
 This example demonstrates how to set the plotting style.
 """
 print __doc__
-import sys
+
+from rootpy.extern.argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument('style', default='ATLAS', nargs='?')
+args, extra = parser.parse_known_args()
+
 import ROOT
-import rootpy
-rootpy.log.basic_config_colorized()
-from rootpy.plotting import Hist
+from rootpy.plotting import Canvas, Hist
 from rootpy.plotting.style import get_style
 from rootpy.interactive import wait
 
-if len(sys.argv) == 1:
-    print "you can also specify a style as argument"
+try:
+    kwargs = {}
+    for arg in extra:
+        name, value = arg.lstrip('--').split('=')
+        kwargs[name] = value
+except ValueError:
+    print("specify style parameters with --name=value")
 
-style = get_style(sys.argv[1] if len(sys.argv) > 1 else 'ATLAS')
+try:
+    style = get_style(args.style, **kwargs)
+except ValueError:
+    print('Invalid style: `{0}`. Using the `ATLAS` style.'.format(args.style))
+    style = get_style('ATLAS')
 
-# Use styles as context managers. The ATLAS style will only apply
+# Use styles as context managers. The selected style will only apply
 # within the following context:
 with style:
+    c = Canvas()
     hpx = Hist(100, -4, 4, name="hpx", title="This is the px distribution")
     # generate some random data
     ROOT.gRandom.SetSeed()

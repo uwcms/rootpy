@@ -1,3 +1,4 @@
+.. _setuptools: https://pypi.python.org/pypi/setuptools
 .. _ROOT: http://root.cern.ch/
 .. _PyROOT: http://root.cern.ch/drupal/content/pyroot
 .. _matplotlib: http://matplotlib.sourceforge.net/
@@ -10,4 +11,4 @@
 .. _StatsModels: http://statsmodels.sourceforge.net/
 .. _scikit-learn: http://scikit-learn.org
 .. _TMVA: http://tmva.sourceforge.net/
-.. _root_numpy: https://github.com/rootpy/root_numpy
+.. _root_numpy: http://rootpy.github.io/root_numpy/

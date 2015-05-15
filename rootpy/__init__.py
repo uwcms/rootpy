@@ -1,19 +1,66 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
-# First import
-import warnings
-# show deprecation warnings
-warnings.filterwarnings('default', category=DeprecationWarning)
+from __future__ import absolute_import
+
+import sys
+from collections import namedtuple
+
+# DO NOT expose ROOT at module level here since that conflicts with rootpy.ROOT
+# See issue https://github.com/rootpy/rootpy/issues/343
+import ROOT as R
 
 from .logger import log
-
 # Needed for "from rootpy import QROOT" by other modules
-from .util import quickroot as QROOT
+from .utils import quickroot as QROOT
 from . import defaults
-from .core import Object
+from .base import Object
 from .info import __version_info__, __version__
 
-import ROOT
+__all__ = [
+    'log',
+    'ROOT_VERSION',
+    'QROOT',
+    'asrootpy',
+    'lookup',
+    'lookup_by_name',
+    'lookup_rootpy',
+    'register',
+    'create',
+]
+
+
+class ROOTVersion(namedtuple('_ROOTVersionBase',
+                             ['major', 'minor', 'micro'])):
+
+    def __new__(cls, version):
+        if version < 1E4:
+            raise ValueError(
+                "{0:d} is not a valid ROOT version integer".format(version))
+        return super(ROOTVersion, cls).__new__(
+            cls,
+            int(version / 1E4), int((version / 1E2) % 100), int(version % 100))
+
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        return '{0:d}.{1:02d}/{2:02d}'.format(*self)
+
+
+# Note: requires defaults import
+ROOT_VERSION = ROOTVersion(QROOT.gROOT.GetVersionInt())
+log.debug("Using ROOT {0}".format(ROOT_VERSION))
+
+IN_NOSETESTS = False
+if sys.argv and sys.argv[0].endswith('nosetests'):
+    IN_NOSETESTS = True
+
+IN_IPYTHON = '__IPYTHON__' in __builtins__
+if IN_IPYTHON:
+    from IPython.kernel.zmq.iostream import OutStream
+    IN_IPYTHON_NOTEBOOK = isinstance(sys.stdout, OutStream)
+else:
+    IN_IPYTHON_NOTEBOOK = False
 
 
 class ROOTError(RuntimeError):
@@ -27,6 +74,7 @@ class ROOTError(RuntimeError):
         return "level={0}, loc='{1}', msg='{2}'".format(
             self.level, self.location, self.msg)
 
+
 def rootpy_source_dir():
     import rootpy
     from os.path import abspath, dirname
@@ -35,6 +83,7 @@ def rootpy_source_dir():
     path = dirname(getfile(modules[__name__]))
     absp = abspath(path)
     return path, absp
+
 
 _ROOTPY_SOURCE_PATH, _ROOTPY_SOURCE_ABSPATH = rootpy_source_dir()
 del rootpy_source_dir
@@ -51,18 +100,39 @@ required to cast ROOT objects into the rootpy form when extracted from a ROOT
 TFile, for example.
 """
 INIT_REGISTRY = {
-    'TTree': 'tree.tree.Tree',
 
+    'TList': 'collection.List',
+    'TObjArray': 'collection.ObjArray',
+
+    'TTree': 'tree.tree.Tree',
+    'TNtuple': 'tree.tree.Ntuple',
+
+    'TKey': 'io.file.Key',
     'TDirectoryFile': 'io.file.Directory',
     'TFile': 'io.file.File',
+    'TMemFile': 'io.file.MemFile',
 
     'TStyle': 'plotting.style.Style',
     'TCanvas': 'plotting.canvas.Canvas',
     'TPad': 'plotting.canvas.Pad',
+    'TPave': 'plotting.box.Pave',
+    'TPaveStats': 'plotting.box.PaveStats',
     'TLegend': 'plotting.legend.Legend',
+    'TEllipse': 'plotting.shapes.Ellipse',
+    'TLine': 'plotting.shapes.Line',
+    'TArrow': 'plotting.shapes.Arrow',
 
-    'TGraphAsymmErrors': 'plotting.graph.Graph',
-    'TGraph2D': 'plotting.graph.Graph2D',
+    'TF1': 'plotting.func.F1',
+    'TF2': 'plotting.func.F2',
+    'TF3': 'plotting.func.F3',
+
+    'TGraph': ('plotting.graph.Graph', dict(type='default')),
+    'TGraphErrors': ('plotting.graph.Graph', dict(type='errors')),
+    'TGraphAsymmErrors': ('plotting.graph.Graph', dict(type='asymm')),
+    'TGraphBentErrors': ('plotting.graph.Graph', dict(type='benterrors')),
+
+    'TGraph2D': ('plotting.graph.Graph2D', dict(type='default')),
+    'TGraph2DErrors': ('plotting.graph.Graph2D', dict(type='errors')),
 
     'TProfile': 'plotting.profile.Profile',
     'TProfile2D': 'plotting.profile.Profile2D',
@@ -86,23 +156,62 @@ INIT_REGISTRY = {
     'TH3F': ('plotting.hist.Hist3D', dict(type='F')),
     'TH3D': ('plotting.hist.Hist3D', dict(type='D')),
 
+    'TEfficiency': 'plotting.hist.Efficiency',
+
     'THStack': 'plotting.hist.HistStack',
 
-    'TVector2': 'math.physics.vector.Vector2',
-    'TVector3': 'math.physics.vector.Vector3',
-    'TLorentzVector': 'math.physics.vector.LorentzVector',
-    'TRotation': 'math.physics.vector.Rotation',
-    'TLorentzRotation': 'math.physics.vector.LorentzRotation',
+    'TAxis': 'plotting.axis.Axis',
+
+    'TVector2': 'vector.Vector2',
+    'TVector3': 'vector.Vector3',
+    'TLorentzVector': 'vector.LorentzVector',
+    'TRotation': 'vector.Rotation',
+    'TLorentzRotation': 'vector.LorentzRotation',
+
+    'TMatrixT<float>': ('matrix.Matrix', dict(type='float')),
+    'TMatrixT<double>': ('matrix.Matrix', dict(type='double')),
+    'TMatrixTSym<float>': ('matrix.SymmetricMatrix', dict(type='float')),
+    'TMatrixTSym<double>': ('matrix.SymmetricMatrix', dict(type='double')),
+
+    'RooWorkspace': 'stats.workspace.Workspace',
+    'RooStats::ModelConfig': 'stats.modelconfig.ModelConfig',
+    'RooArgSet': 'stats.collection.ArgSet',
+    'RooArgList': 'stats.collection.ArgList',
+    'RooRealVar': 'stats.value.RealVar',
+    'RooSimultaneous': 'stats.pdf.Simultaneous',
+    'RooAddPdf': 'stats.pdf.AddPdf',
+    'RooProdPdf': 'stats.pdf.ProdPdf',
+    'RooCatType': 'stats.category.CatType',
+    'RooCategory': 'stats.category.Category',
+    'RooDataSet': 'stats.dataset.DataSet',
+    'RooMinimizer': 'stats.fit.Minimizer',
+    'RooFitResult': 'stats.fit.FitResult',
+
+    'RooStats::HistFactory::Data': 'stats.histfactory.Data',
+    'RooStats::HistFactory::Sample': 'stats.histfactory.Sample',
+    'RooStats::HistFactory::HistoSys': 'stats.histfactory.HistoSys',
+    'RooStats::HistFactory::HistoFactor': 'stats.histfactory.HistoFactor',
+    'RooStats::HistFactory::OverallSys': 'stats.histfactory.OverallSys',
+    'RooStats::HistFactory::NormFactor': 'stats.histfactory.NormFactor',
+    'RooStats::HistFactory::ShapeSys': 'stats.histfactory.ShapeSys',
+    'RooStats::HistFactory::ShapeFactor': 'stats.histfactory.ShapeFactor',
+    'RooStats::HistFactory::Channel': 'stats.histfactory.Channel',
+    'RooStats::HistFactory::Measurement': 'stats.histfactory.Measurement',
 }
 
-# Note: requires defaults import
-ROOT_VERSION = QROOT.gROOT.GetVersionInt()
-if ROOT_VERSION >= 52800:
-    INIT_REGISTRY['TEfficiency'] = 'plotting.hist.Efficiency'
+# map rootpy name to location in rootpy (i.e. Axis -> plotting.axis)
+INIT_REGISTRY_ROOTPY = {}
+for rtype, rptype in INIT_REGISTRY.items():
+    if isinstance(rptype, tuple):
+        rptype = rptype[0]
+    cls_path, _, cls_name = rptype.rpartition('.')
+    INIT_REGISTRY_ROOTPY[cls_name] = cls_path
 
-
-# this dict is populated as classes are registered at runtime
+# these dicts are populated as classes are registered at runtime
+# ROOT class name -> rootpy class
 REGISTRY = {}
+# rootpy class name -> rootpy class
+REGISTRY_ROOTPY = {}
 
 
 def asrootpy(thing, **kwargs):
@@ -111,11 +220,37 @@ def asrootpy(thing, **kwargs):
     if isinstance(thing, Object):
         return thing
 
+    warn = kwargs.pop('warn', True)
+    after_init = kwargs.pop('after_init', False)
+
+    # is this thing a class?
+    if isinstance(thing, QROOT.PyRootType):
+        if issubclass(thing, Object):
+            return thing
+        result = lookup(thing)
+        if result is None:
+            if warn:
+                log.warn(
+                    "There is no rootpy implementation "
+                    "of the class `{0}`".format(thing.__name__))
+            return thing
+        if after_init:
+            # preserve ROOT's __init__
+            class asrootpy_cls(result):
+                def __new__(self, *args, **kwargs):
+                    return asrootpy(thing(*args, **kwargs), warn=warn)
+            asrootpy_cls.__name__ = '{0}_asrootpy'.format(thing.__name__)
+            return asrootpy_cls
+        return result
+
     thing_cls = thing.__class__
     rootpy_cls = lookup(thing_cls)
     if rootpy_cls is None:
-        log.warn("a subclass of %s is not implemented in rootpy" %
-                thing_cls.__name__)
+        if warn:
+            log.warn(
+                "A subclass of `{0}` is not "
+                "implemented in rootpy".format(
+                    thing_cls.__name__))
         return thing
 
     # cast
@@ -125,6 +260,13 @@ def asrootpy(thing, **kwargs):
         thing._post_init(**kwargs)
 
     return thing
+
+
+def _get_class(path, name):
+
+    rootpy_module = __import__(
+        path, globals(), locals(), [name], -1)
+    return getattr(rootpy_module, name)
 
 
 def lookup(cls):
@@ -145,14 +287,28 @@ def lookup_by_name(cls_name):
     elif isinstance(entry, basestring):
         path = entry
         dynamic_kwargs = None
-    path_tokens = path.split('.')
-    path, rootpy_cls_name = '.'.join(path_tokens[:-1]), path_tokens[-1]
-    rootpy_module = __import__(
-            path, globals(), locals(), [rootpy_cls_name], -1)
-    rootpy_cls = getattr(rootpy_module, rootpy_cls_name)
+    cls_path, _, rootpy_cls_name = path.rpartition('.')
+
+    rootpy_cls = _get_class(cls_path, rootpy_cls_name)
+
     if dynamic_kwargs is not None:
         rootpy_cls = rootpy_cls.dynamic_cls(**dynamic_kwargs)
     REGISTRY[cls_name] = rootpy_cls
+    return rootpy_cls
+
+
+def lookup_rootpy(rootpy_cls_name):
+
+    rootpy_cls = REGISTRY_ROOTPY.get(rootpy_cls_name, None)
+    if rootpy_cls is not None:
+        return rootpy_cls
+    cls_path = INIT_REGISTRY_ROOTPY.get(rootpy_cls_name, None)
+    if cls_path is None:
+        return None
+
+    rootpy_cls = _get_class(cls_path, rootpy_cls_name)
+
+    REGISTRY_ROOTPY[rootpy_cls_name] = rootpy_cls
     return rootpy_cls
 
 
@@ -182,23 +338,17 @@ class register(object):
 
         for name in cls_names:
             if name in REGISTRY:
-                log.warn("duplicate registration of class %s" % name)
+                log.warn(
+                    "duplicate registration of "
+                    "class `{0}`".format(name))
             REGISTRY[name] = cls
         return cls
 
 
 def create(cls_name, *args, **kwargs):
 
-    cls = getattr(ROOT, cls_name, None)
+    cls = getattr(R, cls_name, None)
     if cls is None:
         return None
     obj = cls(*args, **kwargs)
     return asrootpy(obj)
-
-
-def gDirectory():
-    # handle versions of ROOT older than 5.32.00
-    if ROOT_VERSION < 53200:
-        return ROOT.gDirectory
-    else:
-        return ROOT.gDirectory.func()

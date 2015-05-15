@@ -1,6 +1,12 @@
 # Copyright 2012 the rootpy developers
 # distributed under the terms of the GNU General Public License
-from rootpy.plotting.core import _StyleContainer
+from __future__ import absolute_import
+
+from .base import _StyleContainer
+
+__all__ = [
+    'Font',
+]
 
 fonts_root2text = {
     1: 'times-medium-i-normal',
@@ -20,8 +26,8 @@ fonts_root2text = {
     15: 'symbol-italic',
     }
 
-fonts_text2root = dict([(value, key)
-    for key, value in fonts_root2text.items()])
+fonts_text2root = dict([
+    (value, key) for key, value in fonts_root2text.items()])
 
 
 class Font(_StyleContainer):
@@ -42,12 +48,11 @@ class Font(_StyleContainer):
         self._mpl = None
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     # Example from http://root.cern.ch/root/html/TAttText.html#T5
     from rootpy.plotting import Canvas
     from rootpy.interactive import wait
     from ROOT import TLatex
-
 
     c = Canvas(500, 700, name="ROOT Fonts", title="ROOT Fonts")
     c.Range(0, 0, 1, 1)
@@ -55,7 +60,7 @@ if __name__=='__main__':
     c.SetFrameFillColor(0)
 
     def get_text(x, y, f, s):
-        t = TLatex(x, y, "#font[41]{%d :} %s" % (f(), s))
+        t = TLatex(x, y, "#font[41]{{0:d} :} {1}".format(f(), s))
         t.SetTextFont(f('root'))
         t.SetTextAlign(12)
         t.SetTextSize(0.048)
@@ -70,6 +75,5 @@ if __name__=='__main__':
         else:
             t = get_text(0.02, y, f, "ABCD efgh 01234 @#$")
         t.Draw()
-        c.members.append(t)
         y -= 0.065
     wait()

@@ -8,11 +8,8 @@ This example demonstrates how to fill and read trees with branches containing
 user-defined types.
 """
 print __doc__
-import rootpy
-rootpy.log.basic_config_colorized()
-from rootpy.tree import Tree, TreeModel
+from rootpy.tree import Tree, TreeModel, IntCol, ObjectCol
 from rootpy.io import root_open
-from rootpy.types import IntCol, ObjectCol
 import rootpy.compiled as C
 from random import gauss
 
@@ -32,7 +29,6 @@ class Thingy {
 
 # define the model
 class Event(TreeModel):
-
     event_number = IntCol()
     thingy = ObjectCol(C.Thingy)
 
@@ -53,9 +49,7 @@ f.close()
 
 # now to read the same tree
 with root_open("test.root") as f:
-
     tree = f.test
-
     for event in tree:
         thing = event.thingy
         print event.event_number, thing.i, thing.x, thing.y
